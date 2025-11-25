@@ -1,0 +1,101 @@
+{
+    "components": [
+        "topEntity"
+    ],
+    "flags": [
+        20,
+        20
+    ],
+    "hash": "19ffabed6fadc4caa69354a56bf35d6627c90da87d99bd6d04e46c3fc8b813b9",
+    "dependencies": {
+        "transitive": []
+    },
+    "version": "unstable",
+    "files": [
+        {
+            "name": "topEntity.sdc",
+            "sha256": "13d4c1aafcc09a84d81d3b60d513cb901384a10e27e5a5a16572a600f15895f3"
+        },
+        {
+            "name": "HotVectorOr_topEntity_types.vhdl",
+            "sha256": "a608f8544e14a5c8b600c47f4be51a4857fd3713edca512e4d0e791074e5593b"
+        },
+        {
+            "name": "topEntity.vhdl",
+            "sha256": "6f206e4ef6b082680763820565fb1168b369192363cece905ad41aafe8238b8a"
+        }
+    ],
+    "top_component": {
+        "ports_flat": [
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "clk",
+                "is_clock": true,
+                "type_name": "clk.HotVectorOr_topEntity_types.clk_System"
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "rst",
+                "is_clock": false,
+                "type_name": "rst.HotVectorOr_topEntity_types.rst_System"
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "en",
+                "is_clock": false,
+                "type_name": "en.HotVectorOr_topEntity_types.en_System"
+            },
+            {
+                "direction": "in",
+                "width": 128,
+                "name": "old",
+                "is_clock": false,
+                "type_name": "std_logic_vector(127 downto 0)"
+            },
+            {
+                "direction": "in",
+                "width": 128,
+                "name": "r_new",
+                "is_clock": false,
+                "type_name": "std_logic_vector(127 downto 0)"
+            },
+            {
+                "direction": "out",
+                "width": 128,
+                "name": "result",
+                "is_clock": false,
+                "type_name": "std_logic_vector(127 downto 0)"
+            }
+        ],
+        "name": "topEntity"
+    },
+    "domains": {
+        "System": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Asynchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        },
+        "XilinxSystem": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Synchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        },
+        "IntelSystem": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Asynchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        }
+    }
+}

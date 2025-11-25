@@ -1,0 +1,94 @@
+{
+    "components": [
+        "topEntity"
+    ],
+    "flags": [
+        20,
+        20
+    ],
+    "hash": "450369fd5fab888605df017cb6c78497e282f8e29caec930897a7b81f7ef9149",
+    "dependencies": {
+        "transitive": []
+    },
+    "version": "unstable",
+    "files": [
+        {
+            "name": "topEntity.sdc",
+            "sha256": "13d4c1aafcc09a84d81d3b60d513cb901384a10e27e5a5a16572a600f15895f3"
+        },
+        {
+            "name": "ColumnOffsetDecoderBaseline_topEntity_types.vhdl",
+            "sha256": "232ad686b2645f6bcfc5800d0234f3ab79ea2aa8fa44ba0fe82d078fa5d8f999"
+        },
+        {
+            "name": "topEntity.vhdl",
+            "sha256": "b4985eba612f7ca2b76c6aebc3c5fc135e1f73f0ce6af99e92d94ff761785b88"
+        }
+    ],
+    "top_component": {
+        "ports_flat": [
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "clk",
+                "is_clock": true,
+                "type_name": "clk.ColumnOffsetDecoderBaseline_topEntity_types.clk_System"
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "rst",
+                "is_clock": false,
+                "type_name": "rst.ColumnOffsetDecoderBaseline_topEntity_types.rst_System"
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "en",
+                "is_clock": false,
+                "type_name": "en.ColumnOffsetDecoderBaseline_topEntity_types.en_System"
+            },
+            {
+                "direction": "in",
+                "width": 7,
+                "name": "inputSig",
+                "is_clock": false,
+                "type_name": "unsigned(6 downto 0)"
+            },
+            {
+                "direction": "out",
+                "width": 128,
+                "name": "result",
+                "is_clock": false,
+                "type_name": "std_logic_vector(127 downto 0)"
+            }
+        ],
+        "name": "topEntity"
+    },
+    "domains": {
+        "System": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Asynchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        },
+        "XilinxSystem": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Synchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        },
+        "IntelSystem": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Asynchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        }
+    }
+}

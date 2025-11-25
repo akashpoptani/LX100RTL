@@ -1,0 +1,63 @@
+{
+    "components": [
+        "testBench"
+    ],
+    "flags": [
+        20,
+        20
+    ],
+    "hash": "c808e3919b9805986599844ad5f2e9cff3fd89ea839e45e30d87305846ac2355",
+    "dependencies": {
+        "transitive": []
+    },
+    "version": "unstable",
+    "files": [
+        {
+            "name": "ColumnOffsetDecoderFrequency_testBench_types.vhdl",
+            "sha256": "a5984910104bb1ae5594706d31535b259c661a670dc54d168b51f49c39d2c177"
+        },
+        {
+            "name": "testBench.vhdl",
+            "sha256": "076bfec2e8edeea234e2cdf8d1e9f59407f21b5d933b21462a31a2215bf9519c"
+        },
+        {
+            "name": "testBench_slv2string_FD7FE0FDE5409B5E.vhdl",
+            "sha256": "76ad6e6a41f26803fce0edeea54f88c878437b1a39bfb81fff18923737be7966"
+        }
+    ],
+    "top_component": {
+        "ports_flat": [
+            {
+                "direction": "out",
+                "width": 1,
+                "name": "result",
+                "is_clock": false,
+                "type_name": "boolean"
+            }
+        ],
+        "name": "testBench"
+    },
+    "domains": {
+        "System": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Asynchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        },
+        "XilinxSystem": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Synchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        },
+        "IntelSystem": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Asynchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        }
+    }
+}
