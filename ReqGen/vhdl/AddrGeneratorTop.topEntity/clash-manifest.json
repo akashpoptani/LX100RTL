@@ -1,0 +1,122 @@
+{
+    "components": [
+        "topEntity"
+    ],
+    "flags": [
+        20,
+        20
+    ],
+    "hash": "5082da0b4f4a5ef408926d66bfcc82f957ea103bab6774a408793d44327ffe07",
+    "dependencies": {
+        "transitive": []
+    },
+    "version": "unstable",
+    "files": [
+        {
+            "name": "topEntity.sdc",
+            "sha256": "13d4c1aafcc09a84d81d3b60d513cb901384a10e27e5a5a16572a600f15895f3"
+        },
+        {
+            "name": "AddrGeneratorTop_topEntity_types.vhdl",
+            "sha256": "c16059d9d1cdbde5e61ed856b35efc6d533ce588e5c8f419d546f3cfd9646db1"
+        },
+        {
+            "name": "topEntity.vhdl",
+            "sha256": "013d5472ac1a34a267df3e785cc6545ccb3eeecbd2d7c06301264d48061aa60f"
+        }
+    ],
+    "top_component": {
+        "ports_flat": [
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "clk",
+                "is_clock": true,
+                "type_name": "clk.AddrGeneratorTop_topEntity_types.clk_System"
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "rst",
+                "is_clock": false,
+                "type_name": "rst.AddrGeneratorTop_topEntity_types.rst_System"
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "en",
+                "is_clock": false,
+                "type_name": "en.AddrGeneratorTop_topEntity_types.en_System"
+            },
+            {
+                "direction": "in",
+                "width": 16,
+                "name": "ro",
+                "is_clock": false,
+                "type_name": "unsigned(15 downto 0)"
+            },
+            {
+                "direction": "in",
+                "width": 2,
+                "name": "ba",
+                "is_clock": false,
+                "type_name": "unsigned(1 downto 0)"
+            },
+            {
+                "direction": "in",
+                "width": 2,
+                "name": "bg",
+                "is_clock": false,
+                "type_name": "unsigned(1 downto 0)"
+            },
+            {
+                "direction": "in",
+                "width": 1,
+                "name": "ch",
+                "is_clock": false,
+                "type_name": "std_logic_vector(0 downto 0)"
+            },
+            {
+                "direction": "in",
+                "width": 7,
+                "name": "co",
+                "is_clock": false,
+                "type_name": "std_logic_vector(6 downto 0)"
+            },
+            {
+                "direction": "out",
+                "width": 34,
+                "name": "result",
+                "is_clock": false,
+                "type_name": "std_logic_vector(33 downto 0)"
+            }
+        ],
+        "name": "topEntity"
+    },
+    "domains": {
+        "System": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Asynchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        },
+        "XilinxSystem": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Synchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        },
+        "IntelSystem": {
+            "period": 10000,
+            "init_behavior": "Defined",
+            "reset_kind": "Asynchronous",
+            "active_edge": "Rising",
+            "reset_polarity": "ActiveHigh"
+        }
+    }
+}
