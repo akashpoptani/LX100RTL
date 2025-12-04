@@ -1,0 +1,1742 @@
+Information: Updating design information... (UID-85)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 10
+Design : topEntity
+Version: V-2023.12-SP5
+Date   : Tue Dec  2 17:12:55 2025
+****************************************
+
+Operating Conditions: tt0p9v25c   Library: tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: linkedV (input port clocked by clk)
+  Endpoint: clk_gate_result_2_RAM_reg[15]/latch
+            (gating element for clock clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    0.10       0.10 f
+  linkedV (in)                                            0.00       0.10 f
+  U330/ZN (IND2D1BWP30P140)                               0.05       0.15 f
+  U322/Z (BUFFD1BWP30P140)                                0.05       0.20 f
+  U448/ZN (NR2D1BWP30P140)                                0.02       0.22 r
+  clk_gate_result_2_RAM_reg[15]/EN (SNPS_CLOCK_GATE_HIGH_topEntity_18)
+                                                          0.00       0.22 r
+  clk_gate_result_2_RAM_reg[15]/latch/E (CKLNQD1BWP30P140)
+                                                          0.00       0.22 r
+  data arrival time                                                  0.22
+
+  clock clk (rise edge)                                   1.00       1.00
+  clock network delay (ideal)                             0.00       1.00
+  clock uncertainty                                      -0.05       0.95
+  clk_gate_result_2_RAM_reg[15]/latch/CP (CKLNQD1BWP30P140)
+                                                          0.00       0.95 r
+  clock gating setup time                                -0.03       0.92
+  data required time                                                 0.92
+  --------------------------------------------------------------------------
+  data required time                                                 0.92
+  data arrival time                                                 -0.22
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.70
+
+
+  Startpoint: linkedV (input port clocked by clk)
+  Endpoint: result_1_0 (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  linkedV (in)                             0.00       0.10 r
+  U347/Z (BUFFD3BWP30P140)                 0.05       0.15 r
+  result_1_0 (out)                         0.00       0.15 r
+  data arrival time                                   0.15
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.15
+  -----------------------------------------------------------
+  slack (MET)                                         0.70
+
+
+  Startpoint: linkedNewAdr[7]
+              (input port clocked by clk)
+  Endpoint: result_1_1[7]
+            (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  linkedNewAdr[7] (in)                     0.00       0.10 r
+  U373/Z (BUFFD3BWP30P140)                 0.05       0.15 r
+  result_1_1[7] (out)                      0.00       0.15 r
+  data arrival time                                   0.15
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.15
+  -----------------------------------------------------------
+  slack (MET)                                         0.70
+
+
+  Startpoint: linkedNewAdr[6]
+              (input port clocked by clk)
+  Endpoint: result_1_1[6]
+            (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  linkedNewAdr[6] (in)                     0.00       0.10 r
+  U372/Z (BUFFD3BWP30P140)                 0.05       0.15 r
+  result_1_1[6] (out)                      0.00       0.15 r
+  data arrival time                                   0.15
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.15
+  -----------------------------------------------------------
+  slack (MET)                                         0.70
+
+
+  Startpoint: linkedNewAdr[5]
+              (input port clocked by clk)
+  Endpoint: result_1_1[5]
+            (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  linkedNewAdr[5] (in)                     0.00       0.10 r
+  U371/Z (BUFFD3BWP30P140)                 0.05       0.15 r
+  result_1_1[5] (out)                      0.00       0.15 r
+  data arrival time                                   0.15
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.15
+  -----------------------------------------------------------
+  slack (MET)                                         0.70
+
+
+  Startpoint: linkedNewAdr[4]
+              (input port clocked by clk)
+  Endpoint: result_1_1[4]
+            (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  linkedNewAdr[4] (in)                     0.00       0.10 r
+  U370/Z (BUFFD3BWP30P140)                 0.05       0.15 r
+  result_1_1[4] (out)                      0.00       0.15 r
+  data arrival time                                   0.15
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.15
+  -----------------------------------------------------------
+  slack (MET)                                         0.70
+
+
+  Startpoint: linkedNewAdr[3]
+              (input port clocked by clk)
+  Endpoint: result_1_1[3]
+            (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  linkedNewAdr[3] (in)                     0.00       0.10 r
+  U369/Z (BUFFD3BWP30P140)                 0.05       0.15 r
+  result_1_1[3] (out)                      0.00       0.15 r
+  data arrival time                                   0.15
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.15
+  -----------------------------------------------------------
+  slack (MET)                                         0.70
+
+
+  Startpoint: linkedNewAdr[2]
+              (input port clocked by clk)
+  Endpoint: result_1_1[2]
+            (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  linkedNewAdr[2] (in)                     0.00       0.10 r
+  U368/Z (BUFFD3BWP30P140)                 0.05       0.15 r
+  result_1_1[2] (out)                      0.00       0.15 r
+  data arrival time                                   0.15
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.15
+  -----------------------------------------------------------
+  slack (MET)                                         0.70
+
+
+  Startpoint: linkedNewAdr[1]
+              (input port clocked by clk)
+  Endpoint: result_1_1[1]
+            (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  linkedNewAdr[1] (in)                     0.00       0.10 r
+  U343/Z (BUFFD3BWP30P140)                 0.05       0.15 r
+  result_1_1[1] (out)                      0.00       0.15 r
+  data arrival time                                   0.15
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.15
+  -----------------------------------------------------------
+  slack (MET)                                         0.70
+
+
+  Startpoint: linkedNewAdr[0]
+              (input port clocked by clk)
+  Endpoint: result_1_1[0]
+            (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  linkedNewAdr[0] (in)                     0.00       0.10 r
+  U342/Z (BUFFD3BWP30P140)                 0.05       0.15 r
+  result_1_1[0] (out)                      0.00       0.15 r
+  data arrival time                                   0.15
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.15
+  -----------------------------------------------------------
+  slack (MET)                                         0.70
+
+
+  Startpoint: result_2_reg[9]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_0[9]
+            (output port clocked by clk)
+  Path Group: OUTPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_32
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_31
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_30
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_29
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_28
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_27
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_26
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_25
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_24
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_23
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_22
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_21
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_20
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_19
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_17
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_16
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_15
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_14
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_13
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_12
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_11
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_10
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_9
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_8
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_7
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_6
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_5
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_4
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_3
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_2
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_0
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  result_2_reg[9]/CP (DFQD4BWP30P140)      0.00       0.00 r
+  result_2_reg[9]/Q (DFQD4BWP30P140)       0.07       0.07 f
+  result_0[9] (out)                        0.00       0.07 f
+  data arrival time                                   0.07
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.07
+  -----------------------------------------------------------
+  slack (MET)                                         0.78
+
+
+  Startpoint: result_2_reg[8]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_0[8]
+            (output port clocked by clk)
+  Path Group: OUTPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_32
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_31
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_30
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_29
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_28
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_27
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_26
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_25
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_24
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_23
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_22
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_21
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_20
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_19
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_17
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_16
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_15
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_14
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_13
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_12
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_11
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_10
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_9
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_8
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_7
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_6
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_5
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_4
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_3
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_2
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_0
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  result_2_reg[8]/CP (DFQD4BWP30P140)      0.00       0.00 r
+  result_2_reg[8]/Q (DFQD4BWP30P140)       0.07       0.07 f
+  result_0[8] (out)                        0.00       0.07 f
+  data arrival time                                   0.07
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.07
+  -----------------------------------------------------------
+  slack (MET)                                         0.78
+
+
+  Startpoint: result_2_reg[7]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_0[7]
+            (output port clocked by clk)
+  Path Group: OUTPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_32
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_31
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_30
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_29
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_28
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_27
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_26
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_25
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_24
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_23
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_22
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_21
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_20
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_19
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_17
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_16
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_15
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_14
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_13
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_12
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_11
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_10
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_9
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_8
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_7
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_6
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_5
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_4
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_3
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_2
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_0
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  result_2_reg[7]/CP (DFQD4BWP30P140)      0.00       0.00 r
+  result_2_reg[7]/Q (DFQD4BWP30P140)       0.07       0.07 f
+  result_0[7] (out)                        0.00       0.07 f
+  data arrival time                                   0.07
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.07
+  -----------------------------------------------------------
+  slack (MET)                                         0.78
+
+
+  Startpoint: result_2_reg[6]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_0[6]
+            (output port clocked by clk)
+  Path Group: OUTPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_32
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_31
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_30
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_29
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_28
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_27
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_26
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_25
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_24
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_23
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_22
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_21
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_20
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_19
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_17
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_16
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_15
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_14
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_13
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_12
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_11
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_10
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_9
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_8
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_7
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_6
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_5
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_4
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_3
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_2
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_0
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  result_2_reg[6]/CP (DFQD4BWP30P140)      0.00       0.00 r
+  result_2_reg[6]/Q (DFQD4BWP30P140)       0.07       0.07 f
+  result_0[6] (out)                        0.00       0.07 f
+  data arrival time                                   0.07
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.07
+  -----------------------------------------------------------
+  slack (MET)                                         0.78
+
+
+  Startpoint: result_2_reg[5]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_0[5]
+            (output port clocked by clk)
+  Path Group: OUTPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_32
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_31
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_30
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_29
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_28
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_27
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_26
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_25
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_24
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_23
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_22
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_21
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_20
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_19
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_17
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_16
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_15
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_14
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_13
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_12
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_11
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_10
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_9
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_8
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_7
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_6
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_5
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_4
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_3
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_2
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_0
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  result_2_reg[5]/CP (DFQD4BWP30P140)      0.00       0.00 r
+  result_2_reg[5]/Q (DFQD4BWP30P140)       0.07       0.07 f
+  result_0[5] (out)                        0.00       0.07 f
+  data arrival time                                   0.07
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.07
+  -----------------------------------------------------------
+  slack (MET)                                         0.78
+
+
+  Startpoint: result_2_reg[4]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_0[4]
+            (output port clocked by clk)
+  Path Group: OUTPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_32
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_31
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_30
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_29
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_28
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_27
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_26
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_25
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_24
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_23
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_22
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_21
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_20
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_19
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_17
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_16
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_15
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_14
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_13
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_12
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_11
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_10
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_9
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_8
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_7
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_6
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_5
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_4
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_3
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_2
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_0
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  result_2_reg[4]/CP (DFQD4BWP30P140)      0.00       0.00 r
+  result_2_reg[4]/Q (DFQD4BWP30P140)       0.07       0.07 f
+  result_0[4] (out)                        0.00       0.07 f
+  data arrival time                                   0.07
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.07
+  -----------------------------------------------------------
+  slack (MET)                                         0.78
+
+
+  Startpoint: result_2_reg[3]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_0[3]
+            (output port clocked by clk)
+  Path Group: OUTPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_32
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_31
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_30
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_29
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_28
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_27
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_26
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_25
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_24
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_23
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_22
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_21
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_20
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_19
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_17
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_16
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_15
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_14
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_13
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_12
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_11
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_10
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_9
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_8
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_7
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_6
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_5
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_4
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_3
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_2
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_0
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  result_2_reg[3]/CP (DFQD4BWP30P140)      0.00       0.00 r
+  result_2_reg[3]/Q (DFQD4BWP30P140)       0.07       0.07 f
+  result_0[3] (out)                        0.00       0.07 f
+  data arrival time                                   0.07
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.07
+  -----------------------------------------------------------
+  slack (MET)                                         0.78
+
+
+  Startpoint: result_2_reg[2]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_0[2]
+            (output port clocked by clk)
+  Path Group: OUTPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_32
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_31
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_30
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_29
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_28
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_27
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_26
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_25
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_24
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_23
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_22
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_21
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_20
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_19
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_17
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_16
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_15
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_14
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_13
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_12
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_11
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_10
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_9
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_8
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_7
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_6
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_5
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_4
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_3
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_2
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_0
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  result_2_reg[2]/CP (DFQD4BWP30P140)      0.00       0.00 r
+  result_2_reg[2]/Q (DFQD4BWP30P140)       0.07       0.07 f
+  result_0[2] (out)                        0.00       0.07 f
+  data arrival time                                   0.07
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.07
+  -----------------------------------------------------------
+  slack (MET)                                         0.78
+
+
+  Startpoint: result_2_reg[1]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_0[1]
+            (output port clocked by clk)
+  Path Group: OUTPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_32
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_31
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_30
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_29
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_28
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_27
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_26
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_25
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_24
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_23
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_22
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_21
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_20
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_19
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_17
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_16
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_15
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_14
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_13
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_12
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_11
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_10
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_9
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_8
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_7
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_6
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_5
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_4
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_3
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_2
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_0
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  result_2_reg[1]/CP (DFQD4BWP30P140)      0.00       0.00 r
+  result_2_reg[1]/Q (DFQD4BWP30P140)       0.07       0.07 f
+  result_0[1] (out)                        0.00       0.07 f
+  data arrival time                                   0.07
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.07
+  -----------------------------------------------------------
+  slack (MET)                                         0.78
+
+
+  Startpoint: result_2_reg[0]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_0[0]
+            (output port clocked by clk)
+  Path Group: OUTPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_32
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_31
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_30
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_29
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_28
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_27
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_26
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_25
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_24
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_23
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_22
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_21
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_20
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_19
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_18
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_17
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_16
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_15
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_14
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_13
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_12
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_11
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_10
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_9
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_8
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_7
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_6
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_5
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_4
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_3
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_2
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  SNPS_CLOCK_GATE_HIGH_topEntity_0
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  result_2_reg[0]/CP (DFQD4BWP30P140)      0.00       0.00 r
+  result_2_reg[0]/Q (DFQD4BWP30P140)       0.07       0.07 f
+  result_0[0] (out)                        0.00       0.07 f
+  data arrival time                                   0.07
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.07
+  -----------------------------------------------------------
+  slack (MET)                                         0.78
+
+
+  Startpoint: idx_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_2_reg[9]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  idx_reg[0]/CP (DFCNQD1BWP30P140)         0.00       0.00 r
+  idx_reg[0]/Q (DFCNQD1BWP30P140)          0.04       0.04 r
+  U320/ZN (INVD0BWP30P140)                 0.03       0.07 f
+  U393/ZN (NR2D1BWP30P140)                 0.02       0.09 r
+  U324/ZN (ND2D1BWP30P140)                 0.02       0.11 f
+  U400/ZN (NR2D1BWP30P140)                 0.04       0.16 r
+  U649/ZN (AOI22D1BWP30P140)               0.02       0.18 f
+  U651/ZN (ND4D1BWP30P140)                 0.01       0.19 r
+  U667/Z (OR4D1BWP30P140)                  0.02       0.21 r
+  result_2_reg[9]/D (DFQD4BWP30P140)       0.00       0.21 r
+  data arrival time                                   0.21
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  result_2_reg[9]/CP (DFQD4BWP30P140)      0.00       0.95 r
+  library setup time                      -0.02       0.93
+  data required time                                  0.93
+  -----------------------------------------------------------
+  data required time                                  0.93
+  data arrival time                                  -0.21
+  -----------------------------------------------------------
+  slack (MET)                                         0.72
+
+
+  Startpoint: idx_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_2_reg[8]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  idx_reg[0]/CP (DFCNQD1BWP30P140)         0.00       0.00 r
+  idx_reg[0]/Q (DFCNQD1BWP30P140)          0.04       0.04 r
+  U320/ZN (INVD0BWP30P140)                 0.03       0.07 f
+  U393/ZN (NR2D1BWP30P140)                 0.02       0.09 r
+  U324/ZN (ND2D1BWP30P140)                 0.02       0.11 f
+  U400/ZN (NR2D1BWP30P140)                 0.04       0.16 r
+  U628/ZN (AOI22D1BWP30P140)               0.02       0.18 f
+  U630/ZN (ND4D1BWP30P140)                 0.01       0.19 r
+  U646/Z (OR4D1BWP30P140)                  0.02       0.21 r
+  result_2_reg[8]/D (DFQD4BWP30P140)       0.00       0.21 r
+  data arrival time                                   0.21
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  result_2_reg[8]/CP (DFQD4BWP30P140)      0.00       0.95 r
+  library setup time                      -0.02       0.93
+  data required time                                  0.93
+  -----------------------------------------------------------
+  data required time                                  0.93
+  data arrival time                                  -0.21
+  -----------------------------------------------------------
+  slack (MET)                                         0.72
+
+
+  Startpoint: idx_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_2_reg[7]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  idx_reg[0]/CP (DFCNQD1BWP30P140)         0.00       0.00 r
+  idx_reg[0]/Q (DFCNQD1BWP30P140)          0.04       0.04 r
+  U320/ZN (INVD0BWP30P140)                 0.03       0.07 f
+  U393/ZN (NR2D1BWP30P140)                 0.02       0.09 r
+  U324/ZN (ND2D1BWP30P140)                 0.02       0.11 f
+  U400/ZN (NR2D1BWP30P140)                 0.04       0.16 r
+  U607/ZN (AOI22D1BWP30P140)               0.02       0.18 f
+  U609/ZN (ND4D1BWP30P140)                 0.01       0.19 r
+  U625/Z (OR4D1BWP30P140)                  0.02       0.21 r
+  result_2_reg[7]/D (DFQD4BWP30P140)       0.00       0.21 r
+  data arrival time                                   0.21
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  result_2_reg[7]/CP (DFQD4BWP30P140)      0.00       0.95 r
+  library setup time                      -0.02       0.93
+  data required time                                  0.93
+  -----------------------------------------------------------
+  data required time                                  0.93
+  data arrival time                                  -0.21
+  -----------------------------------------------------------
+  slack (MET)                                         0.72
+
+
+  Startpoint: idx_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_2_reg[6]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  idx_reg[0]/CP (DFCNQD1BWP30P140)         0.00       0.00 r
+  idx_reg[0]/Q (DFCNQD1BWP30P140)          0.04       0.04 r
+  U320/ZN (INVD0BWP30P140)                 0.03       0.07 f
+  U393/ZN (NR2D1BWP30P140)                 0.02       0.09 r
+  U324/ZN (ND2D1BWP30P140)                 0.02       0.11 f
+  U400/ZN (NR2D1BWP30P140)                 0.04       0.16 r
+  U586/ZN (AOI22D1BWP30P140)               0.02       0.18 f
+  U588/ZN (ND4D1BWP30P140)                 0.01       0.19 r
+  U604/Z (OR4D1BWP30P140)                  0.02       0.21 r
+  result_2_reg[6]/D (DFQD4BWP30P140)       0.00       0.21 r
+  data arrival time                                   0.21
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  result_2_reg[6]/CP (DFQD4BWP30P140)      0.00       0.95 r
+  library setup time                      -0.02       0.93
+  data required time                                  0.93
+  -----------------------------------------------------------
+  data required time                                  0.93
+  data arrival time                                  -0.21
+  -----------------------------------------------------------
+  slack (MET)                                         0.72
+
+
+  Startpoint: idx_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_2_reg[5]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  idx_reg[0]/CP (DFCNQD1BWP30P140)         0.00       0.00 r
+  idx_reg[0]/Q (DFCNQD1BWP30P140)          0.04       0.04 r
+  U320/ZN (INVD0BWP30P140)                 0.03       0.07 f
+  U393/ZN (NR2D1BWP30P140)                 0.02       0.09 r
+  U324/ZN (ND2D1BWP30P140)                 0.02       0.11 f
+  U400/ZN (NR2D1BWP30P140)                 0.04       0.16 r
+  U565/ZN (AOI22D1BWP30P140)               0.02       0.18 f
+  U567/ZN (ND4D1BWP30P140)                 0.01       0.19 r
+  U583/Z (OR4D1BWP30P140)                  0.02       0.21 r
+  result_2_reg[5]/D (DFQD4BWP30P140)       0.00       0.21 r
+  data arrival time                                   0.21
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  result_2_reg[5]/CP (DFQD4BWP30P140)      0.00       0.95 r
+  library setup time                      -0.02       0.93
+  data required time                                  0.93
+  -----------------------------------------------------------
+  data required time                                  0.93
+  data arrival time                                  -0.21
+  -----------------------------------------------------------
+  slack (MET)                                         0.72
+
+
+  Startpoint: idx_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_2_reg[4]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  idx_reg[0]/CP (DFCNQD1BWP30P140)         0.00       0.00 r
+  idx_reg[0]/Q (DFCNQD1BWP30P140)          0.04       0.04 r
+  U320/ZN (INVD0BWP30P140)                 0.03       0.07 f
+  U393/ZN (NR2D1BWP30P140)                 0.02       0.09 r
+  U324/ZN (ND2D1BWP30P140)                 0.02       0.11 f
+  U400/ZN (NR2D1BWP30P140)                 0.04       0.16 r
+  U544/ZN (AOI22D1BWP30P140)               0.02       0.18 f
+  U546/ZN (ND4D1BWP30P140)                 0.01       0.19 r
+  U562/Z (OR4D1BWP30P140)                  0.02       0.21 r
+  result_2_reg[4]/D (DFQD4BWP30P140)       0.00       0.21 r
+  data arrival time                                   0.21
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  result_2_reg[4]/CP (DFQD4BWP30P140)      0.00       0.95 r
+  library setup time                      -0.02       0.93
+  data required time                                  0.93
+  -----------------------------------------------------------
+  data required time                                  0.93
+  data arrival time                                  -0.21
+  -----------------------------------------------------------
+  slack (MET)                                         0.72
+
+
+  Startpoint: idx_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_2_reg[3]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  idx_reg[0]/CP (DFCNQD1BWP30P140)         0.00       0.00 r
+  idx_reg[0]/Q (DFCNQD1BWP30P140)          0.04       0.04 r
+  U320/ZN (INVD0BWP30P140)                 0.03       0.07 f
+  U393/ZN (NR2D1BWP30P140)                 0.02       0.09 r
+  U324/ZN (ND2D1BWP30P140)                 0.02       0.11 f
+  U400/ZN (NR2D1BWP30P140)                 0.04       0.16 r
+  U523/ZN (AOI22D1BWP30P140)               0.02       0.18 f
+  U525/ZN (ND4D1BWP30P140)                 0.01       0.19 r
+  U541/Z (OR4D1BWP30P140)                  0.02       0.21 r
+  result_2_reg[3]/D (DFQD4BWP30P140)       0.00       0.21 r
+  data arrival time                                   0.21
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  result_2_reg[3]/CP (DFQD4BWP30P140)      0.00       0.95 r
+  library setup time                      -0.02       0.93
+  data required time                                  0.93
+  -----------------------------------------------------------
+  data required time                                  0.93
+  data arrival time                                  -0.21
+  -----------------------------------------------------------
+  slack (MET)                                         0.72
+
+
+  Startpoint: idx_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_2_reg[2]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  idx_reg[0]/CP (DFCNQD1BWP30P140)         0.00       0.00 r
+  idx_reg[0]/Q (DFCNQD1BWP30P140)          0.04       0.04 r
+  U320/ZN (INVD0BWP30P140)                 0.03       0.07 f
+  U393/ZN (NR2D1BWP30P140)                 0.02       0.09 r
+  U324/ZN (ND2D1BWP30P140)                 0.02       0.11 f
+  U400/ZN (NR2D1BWP30P140)                 0.04       0.16 r
+  U502/ZN (AOI22D1BWP30P140)               0.02       0.18 f
+  U504/ZN (ND4D1BWP30P140)                 0.01       0.19 r
+  U520/Z (OR4D1BWP30P140)                  0.02       0.21 r
+  result_2_reg[2]/D (DFQD4BWP30P140)       0.00       0.21 r
+  data arrival time                                   0.21
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  result_2_reg[2]/CP (DFQD4BWP30P140)      0.00       0.95 r
+  library setup time                      -0.02       0.93
+  data required time                                  0.93
+  -----------------------------------------------------------
+  data required time                                  0.93
+  data arrival time                                  -0.21
+  -----------------------------------------------------------
+  slack (MET)                                         0.72
+
+
+  Startpoint: idx_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_2_reg[1]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  idx_reg[0]/CP (DFCNQD1BWP30P140)         0.00       0.00 r
+  idx_reg[0]/Q (DFCNQD1BWP30P140)          0.04       0.04 r
+  U320/ZN (INVD0BWP30P140)                 0.03       0.07 f
+  U393/ZN (NR2D1BWP30P140)                 0.02       0.09 r
+  U324/ZN (ND2D1BWP30P140)                 0.02       0.11 f
+  U400/ZN (NR2D1BWP30P140)                 0.04       0.16 r
+  U481/ZN (AOI22D1BWP30P140)               0.02       0.18 f
+  U483/ZN (ND4D1BWP30P140)                 0.01       0.19 r
+  U499/Z (OR4D1BWP30P140)                  0.02       0.21 r
+  result_2_reg[1]/D (DFQD4BWP30P140)       0.00       0.21 r
+  data arrival time                                   0.21
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  result_2_reg[1]/CP (DFQD4BWP30P140)      0.00       0.95 r
+  library setup time                      -0.02       0.93
+  data required time                                  0.93
+  -----------------------------------------------------------
+  data required time                                  0.93
+  data arrival time                                  -0.21
+  -----------------------------------------------------------
+  slack (MET)                                         0.72
+
+
+  Startpoint: idx_reg[0] (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: result_2_reg[0]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  SNPS_CLOCK_GATE_HIGH_topEntity_1
+                     ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  idx_reg[0]/CP (DFCNQD1BWP30P140)         0.00       0.00 r
+  idx_reg[0]/Q (DFCNQD1BWP30P140)          0.04       0.04 r
+  U320/ZN (INVD0BWP30P140)                 0.03       0.07 f
+  U393/ZN (NR2D1BWP30P140)                 0.02       0.09 r
+  U324/ZN (ND2D1BWP30P140)                 0.02       0.11 f
+  U400/ZN (NR2D1BWP30P140)                 0.04       0.16 r
+  U460/ZN (AOI22D1BWP30P140)               0.02       0.18 f
+  U462/ZN (ND4D1BWP30P140)                 0.01       0.19 r
+  U478/Z (OR4D1BWP30P140)                  0.02       0.21 r
+  result_2_reg[0]/D (DFQD4BWP30P140)       0.00       0.21 r
+  data arrival time                                   0.21
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  result_2_reg[0]/CP (DFQD4BWP30P140)      0.00       0.95 r
+  library setup time                      -0.02       0.93
+  data required time                                  0.93
+  -----------------------------------------------------------
+  data required time                                  0.93
+  data arrival time                                  -0.21
+  -----------------------------------------------------------
+  slack (MET)                                         0.72
+
+
+1

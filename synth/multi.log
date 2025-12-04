@@ -1,0 +1,2705 @@
+Info: [VCS_SAVE_RESTORE_INFO] ASLR (Address Space Layout Randomization) is detected on the machine. To enable $save functionality, ASLR will be switched off and simv re-executed.
+Please use '-no_save' simv switch to avoid this.
+
+                           Design Compiler Graphical 
+                                 DC Ultra (TM)
+                                  DFTMAX (TM)
+                              Power Compiler (TM)
+                                 DesignWare (R)
+                                 DC Expert (TM)
+                               Design Vision (TM)
+                               HDL Compiler (TM)
+                               VHDL Compiler (TM)
+                                  DFT Compiler
+                               Design Compiler(R)
+
+               Version V-2023.12-SP5 for linux64 - Jul 16, 2024 
+
+                    Copyright (c) 1988 - 2024 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+Initializing...
+Current time:       Tue Dec  2 17:12:07 2025
+Hostname:           caen-vnc-mi16.engin.umich.edu
+CPU Model:          Intel(R) Xeon(R) Gold 6148 CPU @ 2.40GHz
+CPU Details:        Cores = 9 : Sockets = 17 : Cache Size = 28160 KB : Freq = 2.39 GHz
+OS:                 Linux 5.14.0-570.25.1.el9_6.x86_64
+RAM:                 17 GB (Free   3 GB)
+Swap:                 8 GB (Free   8 GB)
+Work Filesystem:    /home/akashpt mounted to //engin-labs.m.storage.umich.edu/engin-labs/home/akashpt/dotfiles
+Tmp Filesystem:     /tmp mounted to /dev/mapper/vg1-lv_tmp
+Work Disk:          64512 GB (Free 11338 GB)
+Tmp Disk:            29 GB (Free  28 GB)
+
+CPU Load: 48%, Ram Free: 3 GB, Swap Free: 8 GB, Work Disk Free: 11338 GB, Tmp Disk Free: 28 GB
+###############################################################
+# Synopsys Design Compiler Synthesis Script for LX100RTL
+# Target: TSMC 28HPC+ CCS
+# Goal: 1 GHz (1.0 ns) synthesis
+###############################################################
+#===============================
+# Project configuration
+#===============================
+set clock_name  "clk"
+clk
+set reset_name  "rst"
+rst
+set CLK_PERIOD  1.0   ;# <-- 1 GHz target
+1.0
+#===============================
+# Library setup
+#===============================
+set search_path [list \
+    "./" \
+    "/afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/" \
+]
+./ /afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/
+# choose a typical corner (example: tt,0.9V,25C)
+set target_library "tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db"
+tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db
+set link_library   [concat "*" $target_library]
+* tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db
+#/***********************************************************/
+#/* Set some flags to suppress warnings we don't care about */
+set suppress_errors [concat $suppress_errors "UID-401"]
+UID-401
+suppress_message {"VER-130"}
+proc synthesize_one {block_name vhdl_files out_dir} {
+    file mkdir "/home/akashpt/LX100RTL/synth/${block_name}"
+    puts "\n===================================================" 
+    puts " Synthesizing block: $block_name" 
+    puts "===================================================\n"
+    read_file -format vhdl $vhdl_files
+    current_design topEntity
+
+    #===============================
+    # Constraints
+    #===============================
+    global CLK_PERIOD clock_name reset_name
+    #===========================================================
+    # Improved, accurate constraints for VHDL synthesis (1 GHz)
+    #===========================================================
+
+    # Clock definition (1 GHz)
+    create_clock -period $CLK_PERIOD -name $clock_name [get_ports $clock_name]
+
+    # Clock uncertainty (for skew + jitter)
+    set_clock_uncertainty 0.05 [get_clocks $clock_name]
+
+    # Input / Output delays (you can tune these)
+    set_input_delay  0.10 -clock $clock_name [remove_from_collection [all_inputs] [get_ports $clock_name]]
+    set_output_delay 0.10 -clock $clock_name [all_outputs]
+
+    # Allow DC to manage the reset, but don’t optimize it away
+    if {[sizeof_collection [get_ports $reset_name]] > 0} {
+        set_dont_touch [get_ports $reset_name]
+    }
+
+    # Driving cell behavior (old: dffacs1)
+    # More accurate replacement for 28HPC+:
+    set_driving_cell -lib_cell DFFHQX1 [all_inputs]
+
+    # Load on outputs
+    set_load 0.05 [all_outputs]
+
+    # Max transition allowed on nets
+    set_max_transition 0.08 [current_design]
+
+    # Max fanout allowed
+    set_max_fanout 20 [current_design]
+
+    # Critical range (old was 1.0)
+    set_critical_range 0.10 [current_design]
+
+    # Group input/output paths for reporting clarity
+    group_path -name INPUTS  -from [all_inputs]
+    group_path -name OUTPUTS -to   [all_outputs]
+
+    # Fanout load (old value was 10)
+    set_fanout_load 0.10 [all_outputs]
+
+    #===============
+    # Additional DC fixes
+    #===============
+    set_fix_multiple_port_nets -all -buffer_constants
+    uniquify
+    check_design
+
+    #===============
+    # Compile
+    #===============
+    compile_ultra -no_autoungroup -gate_clock -retime
+
+    #===============================
+    # Reports
+    #===============================
+    report_timing  -max_paths 10  > synth/${block_name}/timing.rpt
+    report_area                     > synth/${block_name}/area.rpt
+    report_power                    > synth/${block_name}/power.rpt
+    report_design                   > synth/${block_name}/design.rpt
+
+    #===============================
+    # Write final outputs
+    #===============================
+    write -format verilog -hierarchy -output synth/${block_name}/topEntity.v
+    write -format ddc               -output synth/${block_name}/topEntity.ddc
+}
+# RequestGenerator1
+synthesize_one \
+    RequestGenerator1 \
+    [list \
+    "ReqGen/vhdl/RequestGenerator.topEntity/topEntity.vhdl" \
+    "ReqGen/vhdl/RequestGenerator.topEntity/RequestGenerator_topEntity_types.vhdl" \
+    ] \
+    "/home/akashpt/LX100RTL/synth/RequestGenerator.topEntity"
+
+===================================================
+ Synthesizing block: RequestGenerator1
+===================================================
+
+Loading db file '/afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db'
+Information: Using CCS timing libraries. (TIM-024)
+Loading db file '/usr/caen/synopsys-synth-2023.12-SP5/libraries/syn/gtech.db'
+Loading db file '/usr/caen/synopsys-synth-2023.12-SP5/libraries/syn/standard.sldb'
+  Loading link library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs'
+  Loading link library 'gtech'
+Loading vhdl files: '/home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/topEntity.vhdl' '/home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/RequestGenerator_topEntity_types.vhdl' 
+Running PRESTO HDLC
+-- Compiling Source File /home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/topEntity.vhdl
+Compiling Entity Declaration TOPENTITY
+Compiling Architecture STRUCTURAL of TOPENTITY
+Warning:  /home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/topEntity.vhdl:29: The architecture structural has already been analyzed. It is being replaced. (VHD-4)
+-- Compiling Source File /home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/RequestGenerator_topEntity_types.vhdl
+Compiling Package Declaration REQUESTGENERATOR_TOPENTITY_TYPES
+Compiling Package Body REQUESTGENERATOR_TOPENTITY_TYPES
+Warning:  /home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/topEntity.vhdl:35: The initial value for signal 'idx' is not supported for synthesis. Presto ignores it.  (ELAB-130)
+Warning:  /home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/topEntity.vhdl:55: The initial value for signal 'result_2_RAM' is not supported for synthesis. Presto ignores it.  (ELAB-130)
+
+Statistics for case statements in always block at line 46 in file
+	'/home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/topEntity.vhdl'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|            46            |    auto/auto     |
+===============================================
+
+Statistics for case statements in always block at line 130 in file
+	'/home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/topEntity.vhdl'
+===============================================
+|           Line           |  full/ parallel  |
+===============================================
+|           130            |    auto/auto     |
+===============================================
+
+Inferred memory devices in process
+	in routine topEntity line 103 in file
+		'/home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/topEntity.vhdl'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|  result_2_RAM_reg   | Flip-flop |  352  |  Y  | N  | N  | N  | N  | N  | N  |
+|    result_2_reg     | Flip-flop |  11   |  Y  | N  | N  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine topEntity line 118 in file
+		'/home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/topEntity.vhdl'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|       idx_reg       | Flip-flop |   5   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Statistics for MUX_OPs
+======================================================
+| block name/line  | Inputs | Outputs | # sel inputs |
+======================================================
+|  topEntity/109   |   32   |   11    |      5       |
+======================================================
+Presto compilation completed successfully.
+Current design is now '/home/akashpt/LX100RTL/ReqGen/vhdl/RequestGenerator.topEntity/topEntity.db:topEntity'
+Loaded 1 design.
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Error: Cannot find the specified driving cell in memory.   (UID-993)
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Warning: Dont_touch on net 'rst' may be overridden by compile because it
+	is connected to generic logic. Use all_connected to see net
+	connections. (OPT-461)
+Warning: Dont_touch on net 'rst' may be overridden by compile because it
+	is connected to generic logic. Use all_connected to see net
+	connections. (OPT-461)
+ 
+****************************************
+check_design summary:
+Version:     V-2023.12-SP5
+Date:        Tue Dec  2 17:12:24 2025
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                     56
+    Unconnected ports (LINT-28)                                    21
+    Feedthrough (LINT-29)                                          35
+
+Cells                                                               1
+    Cells do not drive (LINT-1)                                     1
+--------------------------------------------------------------------------------
+
+Warning: In design 'topEntity', cell 'C868' does not drive any nets. (LINT-1)
+Warning: In design 'topEntity', port 'ro[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ro[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'bg[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'bg[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ba[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ba[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'ch' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', input port 'linkedV' is connected directly to output port 'result_1_0'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[33]' is connected directly to output port 'result_1_1[33]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[32]' is connected directly to output port 'result_1_1[32]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[31]' is connected directly to output port 'result_1_1[31]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[30]' is connected directly to output port 'result_1_1[30]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[29]' is connected directly to output port 'result_1_1[29]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[28]' is connected directly to output port 'result_1_1[28]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[27]' is connected directly to output port 'result_1_1[27]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[26]' is connected directly to output port 'result_1_1[26]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[25]' is connected directly to output port 'result_1_1[25]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[24]' is connected directly to output port 'result_1_1[24]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[23]' is connected directly to output port 'result_1_1[23]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[22]' is connected directly to output port 'result_1_1[22]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[21]' is connected directly to output port 'result_1_1[21]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[20]' is connected directly to output port 'result_1_1[20]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[19]' is connected directly to output port 'result_1_1[19]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[18]' is connected directly to output port 'result_1_1[18]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[17]' is connected directly to output port 'result_1_1[17]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[16]' is connected directly to output port 'result_1_1[16]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[15]' is connected directly to output port 'result_1_1[15]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[14]' is connected directly to output port 'result_1_1[14]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[13]' is connected directly to output port 'result_1_1[13]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[12]' is connected directly to output port 'result_1_1[12]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[11]' is connected directly to output port 'result_1_1[11]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[10]' is connected directly to output port 'result_1_1[10]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[9]' is connected directly to output port 'result_1_1[9]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[8]' is connected directly to output port 'result_1_1[8]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[7]' is connected directly to output port 'result_1_1[7]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[6]' is connected directly to output port 'result_1_1[6]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[5]' is connected directly to output port 'result_1_1[5]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[4]' is connected directly to output port 'result_1_1[4]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[3]' is connected directly to output port 'result_1_1[3]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[2]' is connected directly to output port 'result_1_1[2]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[1]' is connected directly to output port 'result_1_1[1]'. (LINT-29)
+Warning: In design 'topEntity', input port 'linkedNewAdr[0]' is connected directly to output port 'result_1_1[0]'. (LINT-29)
+Loading db file '/usr/caen/synopsys-synth-2023.12-SP5/libraries/syn/dw_foundation.sldb'
+Information: Failed to find dw_foundation.sldb in the user defined search_path, load it from 'Synopsys Root'. (UISN-70)
+Warning: DesignWare synthetic library dw_foundation.sldb is added to the synthetic_library in the current command. (UISN-40)
+Information: Performing leakage power optimization. (PWR-850)
+CPU Load: 86%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11337 GB, Tmp Disk Free: 28 GB
+Alib files are up-to-date.
+Information: Evaluating DesignWare library utilization. (UISN-27)
+
+============================================================================
+| DesignWare Building Block Library  |         Version         | Available |
+============================================================================
+| Basic DW Building Blocks           | V-2023.12-DWBB_202312.5 |     *     |
+| Licensed DW Building Blocks        | V-2023.12-DWBB_202312.5 |     *     |
+============================================================================
+
+Warning: Dont_touch on net 'rst' may be overridden by compile because it
+	is connected to generic logic. Use all_connected to see net
+	connections. (OPT-461)
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler WLM                                                               |
+| Command Line | compile_ultra -no_autoungroup -retime -gate_clock                                 |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 442                                    |
+| Number of User Hierarchies                              | 0                                      |
+| Sequential Cell Count                                   | 368                                    |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 4                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 9                                      |
+| Number of Dont Touch Nets                               | 1                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+----------------------------------------------------------------------------------------------------
+| Variables                                               | Value                                  |
+----------------------------------------------------------------------------------------------------
+| set_fix_multiple_port_nets                              | -all -buffer_constants                 |
+====================================================================================================
+Information: Sequential output inversion is enabled.  SVF file must be used for formal verification. (OPT-1208)
+Information: Retiming is enabled. SVF file must be used for formal verification. (OPT-1210)
+
+Information: There are 57 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+  Simplifying Design 'topEntity'
+Information: Performing clock-gating with positive edge logic: 'integrated' and negative edge logic: 'integrated'. (PWR-1047)
+Warning: Dont_touch on net 'rst' may be overridden by compile because it
+	is connected to generic logic. Use all_connected to see net
+	connections. (OPT-461)
+
+Loaded alib file './alib-52/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db.alib'
+CPU Load: 78%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11336 GB, Tmp Disk Free: 28 GB
+Information: State dependent leakage is now switched from on to off.
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'topEntity'
+ Implement Synthetic for 'topEntity'.
+  Processing 'SNPS_CLOCK_GATE_HIGH_topEntity_0'
+  Mapping integrated clock gating circuitry
+CPU Load: 78%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11336 GB, Tmp Disk Free: 28 GB
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: The library cell 'TIELBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEHBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_0, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design topEntity_DW01_inc_J1_0, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_1, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_2, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_3, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_4, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_5, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_6, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_7, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_8, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_9, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_10, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_11, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_12, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_13, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_14, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_15, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_16, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_17, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_18, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_19, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_20, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_21, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_22, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_23, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_24, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_25, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_26, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_27, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_28, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_29, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_30, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_31, since there are no registers. (PWR-806)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity_32, since there are no registers. (PWR-806)
+Information: Performing clock-gating on design topEntity. (PWR-730)
+
+  Beginning Mapping Optimizations  (Ultra High effort)
+  -------------------------------
+Information: Added key list 'DesignWare' to design 'topEntity'. (DDB-72)
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:09    1065.3      0.00       0.0     197.1                           5717.8584
+    0:00:09    1065.3      0.00       0.0     197.1                           5717.8584
+
+  Beginning Constant Register Removal
+  -----------------------------------
+
+  Beginning Global Optimizations
+  ------------------------------
+  Numerical Synthesis (Phase 1)
+  Numerical Synthesis (Phase 2)
+  Global Optimization (Phase 1)
+  Global Optimization (Phase 2)
+  Global Optimization (Phase 3)
+  Global Optimization (Phase 4)
+  Global Optimization (Phase 5)
+  Global Optimization (Phase 6)
+  Global Optimization (Phase 7)
+  Global Optimization (Phase 8)
+  Global Optimization (Phase 9)
+  Global Optimization (Phase 10)
+  Global Optimization (Phase 11)
+  Global Optimization (Phase 12)
+  Global Optimization (Phase 13)
+  Global Optimization (Phase 14)
+  Global Optimization (Phase 15)
+  Global Optimization (Phase 16)
+  Global Optimization (Phase 17)
+  Global Optimization (Phase 18)
+  Global Optimization (Phase 19)
+  Global Optimization (Phase 20)
+  Global Optimization (Phase 21)
+  Global Optimization (Phase 22)
+  Global Optimization (Phase 23)
+  Global Optimization (Phase 24)
+  Global Optimization (Phase 25)
+  Global Optimization (Phase 26)
+  Global Optimization (Phase 27)
+  Global Optimization (Phase 28)
+  Global Optimization (Phase 29)
+
+  Beginning Isolate Ports
+  -----------------------
+
+  Beginning Delay Optimization
+  ----------------------------
+    0:00:10    1004.0      0.00       0.0      26.9                           5086.2827
+    0:00:10    1004.0      0.00       0.0      26.9                           5086.2827
+    0:00:10    1004.0      0.00       0.0      26.9                           5086.2827
+    0:00:11    1004.0      0.00       0.0      26.9                           5086.2827
+    0:00:11    1003.7      0.00       0.0      26.9                           5086.2510
+    0:00:11    1003.7      0.00       0.0      26.9                           5086.2510
+
+  Beginning WLM Backend Optimization
+  --------------------------------------
+    0:00:12     999.9      0.00       0.0      26.9                           5034.7285
+    0:00:12     999.9      0.00       0.0      26.9                           5034.7285
+    0:00:12     999.9      0.00       0.0      26.9                           5034.7285
+    0:00:12     999.9      0.00       0.0      26.9                           5034.7285
+    0:00:12     999.9      0.00       0.0      26.9                           5034.7285
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+
+
+  Beginning Design Rule Fixing  (max_transition)
+  ----------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:13     974.2      0.00       0.0      26.9                           4706.4062
+  Global Optimization (Phase 30)
+  Global Optimization (Phase 31)
+  Global Optimization (Phase 32)
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:13     978.4      0.00       0.0       0.0                           4759.7085
+    0:00:14     976.6      0.00       0.0       0.0                           4758.9150
+    0:00:14     976.6      0.00       0.0       0.0                           4758.9150
+    0:00:14     976.6      0.00       0.0       0.0                           4758.9150
+    0:00:14     976.6      0.00       0.0       0.0                           4758.9150
+    0:00:14     976.6      0.00       0.0       0.0                           4758.7715
+    0:00:14     976.6      0.00       0.0       0.0                           4758.7715
+    0:00:14     976.6      0.00       0.0       0.0                           4758.7715
+    0:00:14     976.6      0.00       0.0       0.0                           4758.7715
+    0:00:14     976.6      0.00       0.0       0.0                           4758.7715
+    0:00:14     976.6      0.00       0.0       0.0                           4758.7715
+CPU Load: 74%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11336 GB, Tmp Disk Free: 28 GB
+Loading db file '/afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: State dependent leakage is now switched from off to on.
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+CPU Load: 77%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11335 GB, Tmp Disk Free: 28 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Writing verilog file '/home/akashpt/LX100RTL/synth/RequestGenerator1/topEntity.v'.
+Writing ddc file 'synth/RequestGenerator1/topEntity.ddc'.
+1
+# hotvectororoperation (HotVectorOr) 
+synthesize_one \
+    hotvectororoperation \
+    [list \
+        "/home/akashpt/LX100RTL/ReqGen/vhdl/HotVectorOr.topEntity/topEntity.vhdl" \
+        "/home/akashpt/LX100RTL/ReqGen/vhdl/HotVectorOr.topEntity/HotVectorOr_topEntity_types.vhdl" \
+    ] \
+    "/home/akashpt/LX100RTL/synth/HotVectorOr.topEntity"
+
+===================================================
+ Synthesizing block: hotvectororoperation
+===================================================
+
+Loading vhdl files: '/home/akashpt/LX100RTL/ReqGen/vhdl/HotVectorOr.topEntity/topEntity.vhdl' '/home/akashpt/LX100RTL/ReqGen/vhdl/HotVectorOr.topEntity/HotVectorOr_topEntity_types.vhdl' 
+Running PRESTO HDLC
+-- Compiling Source File /home/akashpt/LX100RTL/ReqGen/vhdl/HotVectorOr.topEntity/topEntity.vhdl
+Compiling Entity Declaration TOPENTITY
+Compiling Architecture STRUCTURAL of TOPENTITY
+Warning:  /home/akashpt/LX100RTL/ReqGen/vhdl/HotVectorOr.topEntity/topEntity.vhdl:22: The architecture structural has already been analyzed. It is being replaced. (VHD-4)
+-- Compiling Source File /home/akashpt/LX100RTL/ReqGen/vhdl/HotVectorOr.topEntity/HotVectorOr_topEntity_types.vhdl
+Compiling Package Declaration HOTVECTOROR_TOPENTITY_TYPES
+Compiling Package Body HOTVECTOROR_TOPENTITY_TYPES
+Presto compilation completed successfully.
+Current design is now '/home/akashpt/LX100RTL/ReqGen/vhdl/HotVectorOr.topEntity/topEntity.db:topEntity'
+Loaded 1 design.
+Current design is 'topEntity'.
+Error: 'topEntity' doesn't specify a unique design
+	Please use complete specification: full_file_name:design_name (UID-13)
+Current design is 'topEntity'.
+Warning: port 'rst' is of the wrong type. (UID-119)
+Warning: Ignoring all 1 objects in collection '_sel26' because they are not of type cell, reference, net, design, power_domain, or lib_cell. (UID-445)
+Error: Value for list 'object_list' must have 1 elements. (CMD-036)
+Error: Cannot find the specified driving cell in memory.   (UID-993)
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+ 
+****************************************
+check_design summary:
+Version:     V-2023.12-SP5
+Date:        Tue Dec  2 17:12:57 2025
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                      3
+    Unconnected ports (LINT-28)                                     3
+--------------------------------------------------------------------------------
+
+Warning: In design 'topEntity', port 'clk' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'rst' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'en' is not connected to any nets. (LINT-28)
+Information: Failed to find dw_foundation.sldb in the user defined search_path, load it from 'Synopsys Root'. (UISN-70)
+Warning: DesignWare synthetic library dw_foundation.sldb is added to the synthetic_library in the current command. (UISN-40)
+Information: Performing leakage power optimization. (PWR-850)
+CPU Load: 77%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11335 GB, Tmp Disk Free: 28 GB
+Alib files are up-to-date.
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler WLM                                                               |
+| Command Line | compile_ultra -no_autoungroup -retime -gate_clock                                 |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 128                                    |
+| Number of User Hierarchies                              | 0                                      |
+| Sequential Cell Count                                   | 0                                      |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 4                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 0                                      |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+----------------------------------------------------------------------------------------------------
+| Variables                                               | Value                                  |
+----------------------------------------------------------------------------------------------------
+| set_fix_multiple_port_nets                              | -all -buffer_constants                 |
+====================================================================================================
+Information: Sequential output inversion is enabled.  SVF file must be used for formal verification. (OPT-1208)
+Information: Retiming is enabled. SVF file must be used for formal verification. (OPT-1210)
+
+Information: There are 3 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+  Simplifying Design 'topEntity'
+
+CPU Load: 70%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11334 GB, Tmp Disk Free: 28 GB
+Information: State dependent leakage is now switched from on to off.
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'topEntity'
+CPU Load: 70%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11334 GB, Tmp Disk Free: 28 GB
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: The library cell 'TIELBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEHBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+Information: Skipping clock gating on design topEntity, since there are no registers. (PWR-806)
+
+  Beginning Mapping Optimizations  (Ultra High effort)
+  -------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:07      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:07      64.5      0.00       0.0    1901.7                            347.9335
+
+  Beginning Constant Register Removal
+  -----------------------------------
+
+  Beginning Global Optimizations
+  ------------------------------
+  Numerical Synthesis (Phase 1)
+  Numerical Synthesis (Phase 2)
+  Global Optimization (Phase 33)
+  Global Optimization (Phase 34)
+  Global Optimization (Phase 35)
+  Global Optimization (Phase 36)
+  Global Optimization (Phase 37)
+  Global Optimization (Phase 38)
+  Global Optimization (Phase 39)
+  Global Optimization (Phase 40)
+  Global Optimization (Phase 41)
+  Global Optimization (Phase 42)
+  Global Optimization (Phase 43)
+  Global Optimization (Phase 44)
+  Global Optimization (Phase 45)
+  Global Optimization (Phase 46)
+  Global Optimization (Phase 47)
+  Global Optimization (Phase 48)
+  Global Optimization (Phase 49)
+  Global Optimization (Phase 50)
+  Global Optimization (Phase 51)
+  Global Optimization (Phase 52)
+  Global Optimization (Phase 53)
+  Global Optimization (Phase 54)
+  Global Optimization (Phase 55)
+  Global Optimization (Phase 56)
+  Global Optimization (Phase 57)
+  Global Optimization (Phase 58)
+  Global Optimization (Phase 59)
+  Global Optimization (Phase 60)
+
+  Beginning Isolate Ports
+  -----------------------
+
+  Beginning Delay Optimization
+  ----------------------------
+    0:00:08      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:08      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:08      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:08      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:08      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:09      64.5      0.00       0.0    1901.7                            347.9335
+
+  Beginning WLM Backend Optimization
+  --------------------------------------
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+
+
+  Beginning Design Rule Fixing  (max_transition)
+  ----------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:10      64.5      0.00       0.0    1901.7                            347.9335
+  Global Optimization (Phase 61)
+  Global Optimization (Phase 62)
+  Global Optimization (Phase 63)
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+
+
+  Beginning Leakage Power Optimization  (max_leakage_power 0)
+  ------------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+  Global Optimization (Phase 64)
+  Global Optimization (Phase 65)
+  Global Optimization (Phase 66)
+  Global Optimization (Phase 67)
+  Global Optimization (Phase 68)
+  Global Optimization (Phase 69)
+  Global Optimization (Phase 70)
+  Global Optimization (Phase 71)
+  Global Optimization (Phase 72)
+  Global Optimization (Phase 73)
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:11     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:12     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:12     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:12     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:12     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:12     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:12     145.2      0.00       0.0       0.0                           1235.8806
+    0:00:12     145.2      0.00       0.0       0.0                           1235.8806
+CPU Load: 67%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11334 GB, Tmp Disk Free: 28 GB
+Loading db file '/afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: State dependent leakage is now switched from off to on.
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+CPU Load: 73%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Writing verilog file '/home/akashpt/LX100RTL/synth/hotvectororoperation/topEntity.v'.
+Writing ddc file 'synth/hotvectororoperation/topEntity.ddc'.
+1
+# addressdecoder (AddrDecoderTop)
+synthesize_one \
+    addressdecoder \
+    [list \
+        "/home/akashpt/LX100RTL/ReqGen/vhdl/AddrDecoderTop.topEntity/topEntity.vhdl" \
+        "/home/akashpt/LX100RTL/ReqGen/vhdl/AddrDecoderTop.topEntity/AddrDecoderTop_topEntity_types.vhdl" \
+    ] \
+    "/home/akashpt/LX100RTL/synth/addressdecoder"
+
+===================================================
+ Synthesizing block: addressdecoder
+===================================================
+
+Loading vhdl files: '/home/akashpt/LX100RTL/ReqGen/vhdl/AddrDecoderTop.topEntity/topEntity.vhdl' '/home/akashpt/LX100RTL/ReqGen/vhdl/AddrDecoderTop.topEntity/AddrDecoderTop_topEntity_types.vhdl' 
+Running PRESTO HDLC
+-- Compiling Source File /home/akashpt/LX100RTL/ReqGen/vhdl/AddrDecoderTop.topEntity/topEntity.vhdl
+Compiling Entity Declaration TOPENTITY
+Compiling Architecture STRUCTURAL of TOPENTITY
+Warning:  /home/akashpt/LX100RTL/ReqGen/vhdl/AddrDecoderTop.topEntity/topEntity.vhdl:26: The architecture structural has already been analyzed. It is being replaced. (VHD-4)
+-- Compiling Source File /home/akashpt/LX100RTL/ReqGen/vhdl/AddrDecoderTop.topEntity/AddrDecoderTop_topEntity_types.vhdl
+Compiling Package Declaration ADDRDECODERTOP_TOPENTITY_TYPES
+Compiling Package Body ADDRDECODERTOP_TOPENTITY_TYPES
+Presto compilation completed successfully.
+Current design is now '/home/akashpt/LX100RTL/ReqGen/vhdl/AddrDecoderTop.topEntity/topEntity.db:topEntity'
+Loaded 1 design.
+Current design is 'topEntity'.
+Error: 'topEntity' doesn't specify a unique design
+	Please use complete specification: full_file_name:design_name (UID-13)
+Current design is 'topEntity'.
+Warning: port 'rst' is of the wrong type. (UID-119)
+Warning: Ignoring all 1 objects in collection '_sel43' because they are not of type cell, reference, net, design, power_domain, or lib_cell. (UID-445)
+Error: Value for list 'object_list' must have 1 elements. (CMD-036)
+Error: Cannot find the specified driving cell in memory.   (UID-993)
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+ 
+****************************************
+check_design summary:
+Version:     V-2023.12-SP5
+Date:        Tue Dec  2 17:13:27 2025
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                     36
+    Unconnected ports (LINT-28)                                     3
+    Feedthrough (LINT-29)                                          33
+--------------------------------------------------------------------------------
+
+Warning: In design 'topEntity', port 'clk' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'rst' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'en' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', input port 'addr[33]' is connected directly to output port 'result_0[15]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[32]' is connected directly to output port 'result_0[14]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[31]' is connected directly to output port 'result_0[13]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[30]' is connected directly to output port 'result_0[12]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[29]' is connected directly to output port 'result_0[11]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[28]' is connected directly to output port 'result_0[10]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[27]' is connected directly to output port 'result_0[9]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[26]' is connected directly to output port 'result_0[8]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[25]' is connected directly to output port 'result_0[7]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[24]' is connected directly to output port 'result_0[6]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[23]' is connected directly to output port 'result_0[5]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[22]' is connected directly to output port 'result_0[4]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[21]' is connected directly to output port 'result_0[3]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[20]' is connected directly to output port 'result_0[2]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[19]' is connected directly to output port 'result_0[1]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[18]' is connected directly to output port 'result_0[0]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[17]' is connected directly to output port 'result_1[1]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[16]' is connected directly to output port 'result_1[0]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[15]' is connected directly to output port 'result_2[1]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[14]' is connected directly to output port 'result_2[0]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[13]' is connected directly to output port 'result_3[6]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[12]' is connected directly to output port 'result_3[5]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[11]' is connected directly to output port 'result_3[4]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[10]' is connected directly to output port 'result_3[3]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[9]' is connected directly to output port 'result_3[2]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[8]' is connected directly to output port 'result_3[1]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[7]' is connected directly to output port 'result_3[0]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[5]' is connected directly to output port 'result_5[5]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[4]' is connected directly to output port 'result_5[4]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[3]' is connected directly to output port 'result_5[3]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[2]' is connected directly to output port 'result_5[2]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[1]' is connected directly to output port 'result_5[1]'. (LINT-29)
+Warning: In design 'topEntity', input port 'addr[0]' is connected directly to output port 'result_5[0]'. (LINT-29)
+Information: Failed to find dw_foundation.sldb in the user defined search_path, load it from 'Synopsys Root'. (UISN-70)
+Warning: DesignWare synthetic library dw_foundation.sldb is added to the synthetic_library in the current command. (UISN-40)
+Information: Performing leakage power optimization. (PWR-850)
+CPU Load: 73%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Alib files are up-to-date.
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler WLM                                                               |
+| Command Line | compile_ultra -no_autoungroup -retime -gate_clock                                 |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 97                                     |
+| Number of User Hierarchies                              | 0                                      |
+| Sequential Cell Count                                   | 0                                      |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 4                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 96                                     |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+----------------------------------------------------------------------------------------------------
+| Variables                                               | Value                                  |
+----------------------------------------------------------------------------------------------------
+| set_fix_multiple_port_nets                              | -all -buffer_constants                 |
+====================================================================================================
+Information: Sequential output inversion is enabled.  SVF file must be used for formal verification. (OPT-1208)
+Information: Retiming is enabled. SVF file must be used for formal verification. (OPT-1210)
+
+Information: There are 36 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+  Simplifying Design 'topEntity'
+
+CPU Load: 81%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11332 GB, Tmp Disk Free: 28 GB
+Information: State dependent leakage is now switched from on to off.
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'topEntity'
+CPU Load: 81%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11332 GB, Tmp Disk Free: 28 GB
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: The library cell 'TIELBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEHBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+Information: Skipping clock gating on design topEntity, since there are no registers. (PWR-806)
+
+  Beginning Mapping Optimizations  (Ultra High effort)
+  -------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:06       0.0      0.00       0.0       0.0                              0.0000
+    0:00:06       0.0      0.00       0.0       0.0                              0.0000
+
+  Beginning Constant Register Removal
+  -----------------------------------
+
+  Beginning Global Optimizations
+  ------------------------------
+  Numerical Synthesis (Phase 1)
+  Numerical Synthesis (Phase 2)
+  Global Optimization (Phase 74)
+  Global Optimization (Phase 75)
+  Global Optimization (Phase 76)
+  Global Optimization (Phase 77)
+  Global Optimization (Phase 78)
+  Global Optimization (Phase 79)
+  Global Optimization (Phase 80)
+  Global Optimization (Phase 81)
+  Global Optimization (Phase 82)
+  Global Optimization (Phase 83)
+  Global Optimization (Phase 84)
+  Global Optimization (Phase 85)
+  Global Optimization (Phase 86)
+  Global Optimization (Phase 87)
+  Global Optimization (Phase 88)
+  Global Optimization (Phase 89)
+  Global Optimization (Phase 90)
+  Global Optimization (Phase 91)
+  Global Optimization (Phase 92)
+  Global Optimization (Phase 93)
+  Global Optimization (Phase 94)
+  Global Optimization (Phase 95)
+  Global Optimization (Phase 96)
+  Global Optimization (Phase 97)
+  Global Optimization (Phase 98)
+  Global Optimization (Phase 99)
+  Global Optimization (Phase 100)
+  Global Optimization (Phase 101)
+
+  Beginning Isolate Ports
+  -----------------------
+
+  Beginning Delay Optimization
+  ----------------------------
+    0:00:06      49.6      0.00       0.0       0.0                            550.0931
+    0:00:06      49.6      0.00       0.0       0.0                            550.0931
+    0:00:06      49.6      0.00       0.0       0.0                            550.0931
+    0:00:07      49.6      0.00       0.0       0.0                            550.0931
+    0:00:07      49.6      0.00       0.0       0.0                            550.0931
+    0:00:07      49.6      0.00       0.0       0.0                            550.0931
+
+  Beginning WLM Backend Optimization
+  --------------------------------------
+    0:00:09      46.1      0.00       0.0       0.0                            504.9527
+    0:00:09      46.1      0.00       0.0       0.0                            504.9527
+    0:00:09      46.1      0.00       0.0       0.0                            504.9527
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:09      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+
+
+  Beginning Leakage Power Optimization  (max_leakage_power 0)
+  ------------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+  Global Optimization (Phase 102)
+  Global Optimization (Phase 103)
+  Global Optimization (Phase 104)
+  Global Optimization (Phase 105)
+  Global Optimization (Phase 106)
+  Global Optimization (Phase 107)
+  Global Optimization (Phase 108)
+  Global Optimization (Phase 109)
+  Global Optimization (Phase 110)
+  Global Optimization (Phase 111)
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+CPU Load: 76%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11332 GB, Tmp Disk Free: 28 GB
+Loading db file '/afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: State dependent leakage is now switched from off to on.
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+CPU Load: 69%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11332 GB, Tmp Disk Free: 28 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Writing verilog file '/home/akashpt/LX100RTL/synth/addressdecoder/topEntity.v'.
+Writing ddc file 'synth/addressdecoder/topEntity.ddc'.
+1
+# columnencoder (ColumnEncoder)
+synthesize_one \
+    columnencoder \
+    [list \
+        "/home/akashpt/LX100RTL/ReqGen/vhdl/AddColumnEncoderrDecoderTop.topEntity/topEntity.vhdl" \
+        "/home/akashpt/LX100RTL/ReqGen/vhdl/ColumnEncoder.topEntity/ColumnEncoder_topEntity_types.vhdl" \
+    ] \
+    "/home/akashpt/LX100RTL/synth/columnencoder"
+
+===================================================
+ Synthesizing block: columnencoder
+===================================================
+
+Error: Cannot read file '/home/akashpt/LX100RTL/ReqGen/vhdl/AddColumnEncoderrDecoderTop.topEntity/topEntity.vhdl'. (UID-58)
+No designs were read
+Error: 'topEntity' doesn't specify a unique design
+	Please use complete specification: full_file_name:design_name (UID-13)
+Current design is 'topEntity'.
+Warning: port 'rst' is of the wrong type. (UID-119)
+Warning: Ignoring all 1 objects in collection '_sel60' because they are not of type cell, reference, net, design, power_domain, or lib_cell. (UID-445)
+Error: Value for list 'object_list' must have 1 elements. (CMD-036)
+Error: Cannot find the specified driving cell in memory.   (UID-993)
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+ 
+****************************************
+check_design summary:
+Version:     V-2023.12-SP5
+Date:        Tue Dec  2 17:13:52 2025
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                      3
+    Unconnected ports (LINT-28)                                     3
+--------------------------------------------------------------------------------
+
+Warning: In design 'topEntity', port 'clk' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'rst' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'en' is not connected to any nets. (LINT-28)
+Information: Failed to find dw_foundation.sldb in the user defined search_path, load it from 'Synopsys Root'. (UISN-70)
+Warning: DesignWare synthetic library dw_foundation.sldb is added to the synthetic_library in the current command. (UISN-40)
+Information: Performing leakage power optimization. (PWR-850)
+CPU Load: 69%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11332 GB, Tmp Disk Free: 28 GB
+Alib files are up-to-date.
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler WLM                                                               |
+| Command Line | compile_ultra -no_autoungroup -retime -gate_clock                                 |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 34                                     |
+| Number of User Hierarchies                              | 0                                      |
+| Sequential Cell Count                                   | 0                                      |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 4                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 0                                      |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+----------------------------------------------------------------------------------------------------
+| Variables                                               | Value                                  |
+----------------------------------------------------------------------------------------------------
+| set_fix_multiple_port_nets                              | -all -buffer_constants                 |
+====================================================================================================
+Information: Sequential output inversion is enabled.  SVF file must be used for formal verification. (OPT-1208)
+Information: Retiming is enabled. SVF file must be used for formal verification. (OPT-1210)
+
+Information: There are 3 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+  Simplifying Design 'topEntity'
+
+CPU Load: 74%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11332 GB, Tmp Disk Free: 28 GB
+Information: State dependent leakage is now switched from on to off.
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'topEntity'
+CPU Load: 74%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11332 GB, Tmp Disk Free: 28 GB
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: The library cell 'TIELBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEHBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+Information: Skipping clock gating on design topEntity, since there are no registers. (PWR-806)
+
+  Beginning Mapping Optimizations  (Ultra High effort)
+  -------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:07       0.0      0.00       0.0       0.0                              0.0000
+    0:00:07       0.0      0.00       0.0       0.0                              0.0000
+
+  Beginning Constant Register Removal
+  -----------------------------------
+
+  Beginning Global Optimizations
+  ------------------------------
+  Numerical Synthesis (Phase 1)
+  Numerical Synthesis (Phase 2)
+  Global Optimization (Phase 112)
+  Global Optimization (Phase 113)
+  Global Optimization (Phase 114)
+  Global Optimization (Phase 115)
+  Global Optimization (Phase 116)
+  Global Optimization (Phase 117)
+  Global Optimization (Phase 118)
+  Global Optimization (Phase 119)
+  Global Optimization (Phase 120)
+  Global Optimization (Phase 121)
+  Global Optimization (Phase 122)
+  Global Optimization (Phase 123)
+  Global Optimization (Phase 124)
+  Global Optimization (Phase 125)
+  Global Optimization (Phase 126)
+  Global Optimization (Phase 127)
+  Global Optimization (Phase 128)
+  Global Optimization (Phase 129)
+  Global Optimization (Phase 130)
+  Global Optimization (Phase 131)
+  Global Optimization (Phase 132)
+  Global Optimization (Phase 133)
+  Global Optimization (Phase 134)
+  Global Optimization (Phase 135)
+  Global Optimization (Phase 136)
+  Global Optimization (Phase 137)
+  Global Optimization (Phase 138)
+  Global Optimization (Phase 139)
+
+  Beginning Isolate Ports
+  -----------------------
+
+  Beginning Delay Optimization
+  ----------------------------
+    0:00:08      49.6      0.00       0.0       0.0                            550.0931
+    0:00:08      49.6      0.00       0.0       0.0                            550.0931
+    0:00:08      49.6      0.00       0.0       0.0                            550.0931
+    0:00:08      49.6      0.00       0.0       0.0                            550.0931
+    0:00:08      49.6      0.00       0.0       0.0                            550.0931
+    0:00:09      49.6      0.00       0.0       0.0                            550.0931
+
+  Beginning WLM Backend Optimization
+  --------------------------------------
+    0:00:10      46.1      0.00       0.0       0.0                            504.9527
+    0:00:10      46.1      0.00       0.0       0.0                            504.9527
+    0:00:10      46.1      0.00       0.0       0.0                            504.9527
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+
+
+  Beginning Leakage Power Optimization  (max_leakage_power 0)
+  ------------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+  Global Optimization (Phase 140)
+  Global Optimization (Phase 141)
+  Global Optimization (Phase 142)
+  Global Optimization (Phase 143)
+  Global Optimization (Phase 144)
+  Global Optimization (Phase 145)
+  Global Optimization (Phase 146)
+  Global Optimization (Phase 147)
+  Global Optimization (Phase 148)
+  Global Optimization (Phase 149)
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:10      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+    0:00:11      21.4      0.00       0.0       0.0                            189.5799
+CPU Load: 86%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11332 GB, Tmp Disk Free: 28 GB
+Loading db file '/afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: State dependent leakage is now switched from off to on.
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+CPU Load: 75%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11332 GB, Tmp Disk Free: 28 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Writing verilog file '/home/akashpt/LX100RTL/synth/columnencoder/topEntity.v'.
+Writing ddc file 'synth/columnencoder/topEntity.ddc'.
+1
+# addresscreator (AddrGeneratorTop)
+synthesize_one \
+    addresscreator \
+    [list \
+        "/home/akashpt/LX100RTL/ReqGen/vhdl/AddrGeneratorTop.topEntity/topEntity.vhdl" \
+        "/home/akashpt/LX100RTL/ReqGen/vhdl/AddrGeneratorTop.topEntity/AddrGeneratorTop_topEntity_types.vhdl" \
+    ] \
+    "/home/akashpt/LX100RTL/synth/addresscreator"
+
+===================================================
+ Synthesizing block: addresscreator
+===================================================
+
+Loading vhdl files: '/home/akashpt/LX100RTL/ReqGen/vhdl/AddrGeneratorTop.topEntity/topEntity.vhdl' '/home/akashpt/LX100RTL/ReqGen/vhdl/AddrGeneratorTop.topEntity/AddrGeneratorTop_topEntity_types.vhdl' 
+Running PRESTO HDLC
+-- Compiling Source File /home/akashpt/LX100RTL/ReqGen/vhdl/AddrGeneratorTop.topEntity/topEntity.vhdl
+Compiling Entity Declaration TOPENTITY
+Compiling Architecture STRUCTURAL of TOPENTITY
+Warning:  /home/akashpt/LX100RTL/ReqGen/vhdl/AddrGeneratorTop.topEntity/topEntity.vhdl:25: The architecture structural has already been analyzed. It is being replaced. (VHD-4)
+-- Compiling Source File /home/akashpt/LX100RTL/ReqGen/vhdl/AddrGeneratorTop.topEntity/AddrGeneratorTop_topEntity_types.vhdl
+Compiling Package Declaration ADDRGENERATORTOP_TOPENTITY_TYPES
+Compiling Package Body ADDRGENERATORTOP_TOPENTITY_TYPES
+Presto compilation completed successfully.
+Current design is now '/home/akashpt/LX100RTL/ReqGen/vhdl/AddrGeneratorTop.topEntity/topEntity.db:topEntity'
+Loaded 1 design.
+Current design is 'topEntity'.
+Error: 'topEntity' doesn't specify a unique design
+	Please use complete specification: full_file_name:design_name (UID-13)
+Current design is 'topEntity'.
+Warning: port 'rst' is of the wrong type. (UID-119)
+Warning: Ignoring all 1 objects in collection '_sel77' because they are not of type cell, reference, net, design, power_domain, or lib_cell. (UID-445)
+Error: Value for list 'object_list' must have 1 elements. (CMD-036)
+Error: Cannot find the specified driving cell in memory.   (UID-993)
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+ 
+****************************************
+check_design summary:
+Version:     V-2023.12-SP5
+Date:        Tue Dec  2 17:14:20 2025
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                     42
+    Unconnected ports (LINT-28)                                     3
+    Feedthrough (LINT-29)                                          28
+    Shorted outputs (LINT-31)                                       5
+    Constant outputs (LINT-52)                                      6
+--------------------------------------------------------------------------------
+
+Warning: In design 'topEntity', port 'clk' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'rst' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'en' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', input port 'ro[15]' is connected directly to output port 'result[33]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[14]' is connected directly to output port 'result[32]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[13]' is connected directly to output port 'result[31]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[12]' is connected directly to output port 'result[30]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[11]' is connected directly to output port 'result[29]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[10]' is connected directly to output port 'result[28]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[9]' is connected directly to output port 'result[27]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[8]' is connected directly to output port 'result[26]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[7]' is connected directly to output port 'result[25]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[6]' is connected directly to output port 'result[24]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[5]' is connected directly to output port 'result[23]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[4]' is connected directly to output port 'result[22]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[3]' is connected directly to output port 'result[21]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[2]' is connected directly to output port 'result[20]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[1]' is connected directly to output port 'result[19]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ro[0]' is connected directly to output port 'result[18]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ba[1]' is connected directly to output port 'result[17]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ba[0]' is connected directly to output port 'result[16]'. (LINT-29)
+Warning: In design 'topEntity', input port 'bg[1]' is connected directly to output port 'result[15]'. (LINT-29)
+Warning: In design 'topEntity', input port 'bg[0]' is connected directly to output port 'result[14]'. (LINT-29)
+Warning: In design 'topEntity', input port 'ch[0]' is connected directly to output port 'result[6]'. (LINT-29)
+Warning: In design 'topEntity', input port 'co[6]' is connected directly to output port 'result[13]'. (LINT-29)
+Warning: In design 'topEntity', input port 'co[5]' is connected directly to output port 'result[12]'. (LINT-29)
+Warning: In design 'topEntity', input port 'co[4]' is connected directly to output port 'result[11]'. (LINT-29)
+Warning: In design 'topEntity', input port 'co[3]' is connected directly to output port 'result[10]'. (LINT-29)
+Warning: In design 'topEntity', input port 'co[2]' is connected directly to output port 'result[9]'. (LINT-29)
+Warning: In design 'topEntity', input port 'co[1]' is connected directly to output port 'result[8]'. (LINT-29)
+Warning: In design 'topEntity', input port 'co[0]' is connected directly to output port 'result[7]'. (LINT-29)
+Warning: In design 'topEntity', output port 'result[5]' is connected directly to output port 'result[0]'. (LINT-31)
+Warning: In design 'topEntity', output port 'result[5]' is connected directly to output port 'result[1]'. (LINT-31)
+Warning: In design 'topEntity', output port 'result[5]' is connected directly to output port 'result[2]'. (LINT-31)
+Warning: In design 'topEntity', output port 'result[5]' is connected directly to output port 'result[3]'. (LINT-31)
+Warning: In design 'topEntity', output port 'result[5]' is connected directly to output port 'result[4]'. (LINT-31)
+Warning: In design 'topEntity', output port 'result[5]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'topEntity', output port 'result[4]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'topEntity', output port 'result[3]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'topEntity', output port 'result[2]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'topEntity', output port 'result[1]' is connected directly to 'logic 0'. (LINT-52)
+Warning: In design 'topEntity', output port 'result[0]' is connected directly to 'logic 0'. (LINT-52)
+Information: Failed to find dw_foundation.sldb in the user defined search_path, load it from 'Synopsys Root'. (UISN-70)
+Warning: DesignWare synthetic library dw_foundation.sldb is added to the synthetic_library in the current command. (UISN-40)
+Information: Performing leakage power optimization. (PWR-850)
+CPU Load: 77%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Alib files are up-to-date.
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler WLM                                                               |
+| Command Line | compile_ultra -no_autoungroup -retime -gate_clock                                 |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 0                                      |
+| Number of User Hierarchies                              | 0                                      |
+| Sequential Cell Count                                   | 0                                      |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 4                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 0                                      |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+----------------------------------------------------------------------------------------------------
+| Variables                                               | Value                                  |
+----------------------------------------------------------------------------------------------------
+| set_fix_multiple_port_nets                              | -all -buffer_constants                 |
+====================================================================================================
+Information: Sequential output inversion is enabled.  SVF file must be used for formal verification. (OPT-1208)
+Information: Retiming is enabled. SVF file must be used for formal verification. (OPT-1210)
+
+Information: There are 42 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+  Simplifying Design 'topEntity'
+
+CPU Load: 73%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Information: State dependent leakage is now switched from on to off.
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'topEntity'
+CPU Load: 70%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: The library cell 'TIELBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEHBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+Information: Skipping clock gating on design topEntity, since there are no registers. (PWR-806)
+
+  Beginning Mapping Optimizations  (Ultra High effort)
+  -------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:05       0.3      0.00       0.0       0.0                              0.0317
+    0:00:05       0.3      0.00       0.0       0.0                              0.0317
+
+  Beginning Constant Register Removal
+  -----------------------------------
+
+  Beginning Global Optimizations
+  ------------------------------
+  Numerical Synthesis (Phase 1)
+  Numerical Synthesis (Phase 2)
+  Global Optimization (Phase 150)
+  Global Optimization (Phase 151)
+  Global Optimization (Phase 152)
+  Global Optimization (Phase 153)
+  Global Optimization (Phase 154)
+  Global Optimization (Phase 155)
+  Global Optimization (Phase 156)
+  Global Optimization (Phase 157)
+  Global Optimization (Phase 158)
+  Global Optimization (Phase 159)
+  Global Optimization (Phase 160)
+  Global Optimization (Phase 161)
+  Global Optimization (Phase 162)
+  Global Optimization (Phase 163)
+  Global Optimization (Phase 164)
+  Global Optimization (Phase 165)
+  Global Optimization (Phase 166)
+  Global Optimization (Phase 167)
+  Global Optimization (Phase 168)
+  Global Optimization (Phase 169)
+  Global Optimization (Phase 170)
+  Global Optimization (Phase 171)
+  Global Optimization (Phase 172)
+  Global Optimization (Phase 173)
+  Global Optimization (Phase 174)
+  Global Optimization (Phase 175)
+  Global Optimization (Phase 176)
+  Global Optimization (Phase 177)
+
+  Beginning Isolate Ports
+  -----------------------
+
+  Beginning Delay Optimization
+  ----------------------------
+    0:00:06      37.0      0.00       0.0       0.0                            400.4896
+    0:00:06      37.0      0.00       0.0       0.0                            400.4896
+    0:00:06      37.0      0.00       0.0       0.0                            400.4896
+    0:00:07      37.0      0.00       0.0       0.0                            400.4896
+    0:00:07      36.8      0.00       0.0       0.0                            400.4579
+    0:00:07      36.8      0.00       0.0       0.0                            400.4579
+
+  Beginning WLM Backend Optimization
+  --------------------------------------
+    0:00:09      35.0      0.00       0.0       0.0                            374.7125
+    0:00:09      35.0      0.00       0.0       0.0                            374.7125
+    0:00:09      35.0      0.00       0.0       0.0                            374.7125
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+
+
+  Beginning Leakage Power Optimization  (max_leakage_power 0)
+  ------------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+  Global Optimization (Phase 178)
+  Global Optimization (Phase 179)
+  Global Optimization (Phase 180)
+  Global Optimization (Phase 181)
+  Global Optimization (Phase 182)
+  Global Optimization (Phase 183)
+  Global Optimization (Phase 184)
+  Global Optimization (Phase 185)
+  Global Optimization (Phase 186)
+  Global Optimization (Phase 187)
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      17.9      0.00       0.0       0.0                            156.1563
+    0:00:09      19.4      0.00       0.0       0.0                            162.2652
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:09      20.2      0.00       0.0       0.0                            171.0014
+    0:00:10      20.2      0.00       0.0       0.0                            171.0014
+    0:00:10      20.2      0.00       0.0       0.0                            171.0014
+    0:00:10      20.2      0.00       0.0       0.0                            171.0014
+    0:00:10      20.2      0.00       0.0       0.0                            171.0014
+    0:00:10      20.2      0.00       0.0       0.0                            171.0014
+    0:00:10      20.2      0.00       0.0       0.0                            171.0014
+    0:00:10      20.2      0.00       0.0       0.0                            171.0014
+    0:00:10      20.2      0.00       0.0       0.0                            171.0014
+    0:00:10      20.2      0.00       0.0       0.0                            171.0014
+    0:00:10      20.2      0.00       0.0       0.0                            171.0014
+CPU Load: 71%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Loading db file '/afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: State dependent leakage is now switched from off to on.
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+CPU Load: 111%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Writing verilog file '/home/akashpt/LX100RTL/synth/addresscreator/topEntity.v'.
+Writing ddc file 'synth/addresscreator/topEntity.ddc'.
+1
+# ColumnOffsetDecoderArea
+synthesize_one \
+    ColumnOffsetDecoderArea \
+    [list \
+        "/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderArea.topEntity/topEntity.vhdl" \
+        "/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderArea.topEntity/ColumnOffsetDecoderArea_topEntity_types.vhdl" \
+    ] \
+    "/home/akashpt/LX100RTL/synth/ColumnOffsetDecoderArea.topEntity"
+
+===================================================
+ Synthesizing block: ColumnOffsetDecoderArea
+===================================================
+
+Loading vhdl files: '/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderArea.topEntity/topEntity.vhdl' '/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderArea.topEntity/ColumnOffsetDecoderArea_topEntity_types.vhdl' 
+Running PRESTO HDLC
+-- Compiling Source File /home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderArea.topEntity/topEntity.vhdl
+Compiling Entity Declaration TOPENTITY
+Compiling Architecture STRUCTURAL of TOPENTITY
+Warning:  /home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderArea.topEntity/topEntity.vhdl:21: The architecture structural has already been analyzed. It is being replaced. (VHD-4)
+-- Compiling Source File /home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderArea.topEntity/ColumnOffsetDecoderArea_topEntity_types.vhdl
+Compiling Package Declaration COLUMNOFFSETDECODERAREA_TOPENTITY_TYPES
+Compiling Package Body COLUMNOFFSETDECODERAREA_TOPENTITY_TYPES
+Presto compilation completed successfully.
+Current design is now '/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderArea.topEntity/topEntity.db:topEntity'
+Loaded 1 design.
+Current design is 'topEntity'.
+Error: 'topEntity' doesn't specify a unique design
+	Please use complete specification: full_file_name:design_name (UID-13)
+Current design is 'topEntity'.
+Warning: port 'rst' is of the wrong type. (UID-119)
+Warning: Ignoring all 1 objects in collection '_sel94' because they are not of type cell, reference, net, design, power_domain, or lib_cell. (UID-445)
+Error: Value for list 'object_list' must have 1 elements. (CMD-036)
+Error: Cannot find the specified driving cell in memory.   (UID-993)
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+ 
+****************************************
+check_design summary:
+Version:     V-2023.12-SP5
+Date:        Tue Dec  2 17:14:48 2025
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                      3
+    Unconnected ports (LINT-28)                                     3
+--------------------------------------------------------------------------------
+
+Warning: In design 'topEntity', port 'clk' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'rst' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'en' is not connected to any nets. (LINT-28)
+Information: Failed to find dw_foundation.sldb in the user defined search_path, load it from 'Synopsys Root'. (UISN-70)
+Warning: DesignWare synthetic library dw_foundation.sldb is added to the synthetic_library in the current command. (UISN-40)
+Information: Performing leakage power optimization. (PWR-850)
+CPU Load: 106%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Alib files are up-to-date.
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler WLM                                                               |
+| Command Line | compile_ultra -no_autoungroup -retime -gate_clock                                 |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 45                                     |
+| Number of User Hierarchies                              | 0                                      |
+| Sequential Cell Count                                   | 0                                      |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 4                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 16                                     |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+----------------------------------------------------------------------------------------------------
+| Variables                                               | Value                                  |
+----------------------------------------------------------------------------------------------------
+| set_fix_multiple_port_nets                              | -all -buffer_constants                 |
+====================================================================================================
+Information: Sequential output inversion is enabled.  SVF file must be used for formal verification. (OPT-1208)
+Information: Retiming is enabled. SVF file must be used for formal verification. (OPT-1210)
+
+Information: There are 3 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+  Simplifying Design 'topEntity'
+
+CPU Load: 104%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Information: State dependent leakage is now switched from on to off.
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'topEntity'
+ Implement Synthetic for 'topEntity'.
+Information: Added key list 'DesignWare' to design 'topEntity'. (DDB-72)
+CPU Load: 104%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: The library cell 'TIELBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEHBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+Information: Skipping clock gating on design topEntity, since there are no registers. (PWR-806)
+
+  Beginning Mapping Optimizations  (Ultra High effort)
+  -------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:06      78.4      0.00       0.0    3888.0                            239.9650
+    0:00:06      78.4      0.00       0.0    3888.0                            239.9650
+
+  Beginning Constant Register Removal
+  -----------------------------------
+
+  Beginning Global Optimizations
+  ------------------------------
+  Numerical Synthesis (Phase 1)
+  Numerical Synthesis (Phase 2)
+  Global Optimization (Phase 188)
+  Global Optimization (Phase 189)
+  Global Optimization (Phase 190)
+  Global Optimization (Phase 191)
+  Global Optimization (Phase 192)
+  Global Optimization (Phase 193)
+  Global Optimization (Phase 194)
+  Global Optimization (Phase 195)
+  Global Optimization (Phase 196)
+  Global Optimization (Phase 197)
+  Global Optimization (Phase 198)
+  Global Optimization (Phase 199)
+  Global Optimization (Phase 200)
+  Global Optimization (Phase 201)
+  Global Optimization (Phase 202)
+  Global Optimization (Phase 203)
+  Global Optimization (Phase 204)
+  Global Optimization (Phase 205)
+  Global Optimization (Phase 206)
+  Global Optimization (Phase 207)
+  Global Optimization (Phase 208)
+  Global Optimization (Phase 209)
+  Global Optimization (Phase 210)
+  Global Optimization (Phase 211)
+  Global Optimization (Phase 212)
+  Global Optimization (Phase 213)
+  Global Optimization (Phase 214)
+  Global Optimization (Phase 215)
+
+  Beginning Isolate Ports
+  -----------------------
+
+  Beginning Delay Optimization
+  ----------------------------
+    0:00:06      63.3      0.00       0.0    3948.6                            203.2575
+    0:00:06      63.3      0.00       0.0    3948.6                            203.2575
+    0:00:06      63.3      0.00       0.0    3948.6                            203.2575
+    0:00:07      63.3      0.00       0.0    3948.6                            203.2575
+    0:00:07      63.3      0.00       0.0    3948.6                            203.2575
+    0:00:07      63.3      0.00       0.0    3948.6                            203.2575
+
+  Beginning WLM Backend Optimization
+  --------------------------------------
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+
+
+  Beginning Design Rule Fixing  (max_transition)
+  ----------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:09      63.3      0.00       0.0    3948.6                            203.1857
+  Global Optimization (Phase 216)
+  Global Optimization (Phase 217)
+  Global Optimization (Phase 218)
+    0:00:10     218.1      0.00       0.0       0.0                           1117.5648
+    0:00:10     218.1      0.00       0.0       0.0                           1117.5648
+
+
+  Beginning Leakage Power Optimization  (max_leakage_power 0)
+  ------------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:10     218.1      0.00       0.0       0.0                           1117.5648
+  Global Optimization (Phase 219)
+  Global Optimization (Phase 220)
+  Global Optimization (Phase 221)
+  Global Optimization (Phase 222)
+  Global Optimization (Phase 223)
+  Global Optimization (Phase 224)
+  Global Optimization (Phase 225)
+  Global Optimization (Phase 226)
+  Global Optimization (Phase 227)
+  Global Optimization (Phase 228)
+  Global Optimization (Phase 229)
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:10     217.2      0.00       0.0       0.0                           1113.4530
+    0:00:11     208.7      0.00       0.0       0.7                           1034.4312
+    0:00:11     208.7      0.00       0.0       0.7                           1034.4312
+    0:00:11     208.7      0.00       0.0       0.7                           1034.4312
+    0:00:11     208.7      0.00       0.0       0.7                           1034.4312
+    0:00:11     205.6      0.00       0.0       0.0                           1028.6538
+    0:00:11     205.6      0.00       0.0       0.0                           1028.6538
+    0:00:11     205.6      0.00       0.0       0.0                           1028.6538
+    0:00:11     205.6      0.00       0.0       0.0                           1028.6538
+    0:00:11     205.6      0.00       0.0       0.0                           1028.6538
+    0:00:11     205.6      0.00       0.0       0.0                           1028.6538
+    0:00:11     205.3      0.00       0.0       0.0                           1028.4132
+CPU Load: 100%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Loading db file '/afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: State dependent leakage is now switched from off to on.
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+CPU Load: 264%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Writing verilog file '/home/akashpt/LX100RTL/synth/ColumnOffsetDecoderArea/topEntity.v'.
+Writing ddc file 'synth/ColumnOffsetDecoderArea/topEntity.ddc'.
+1
+# ColumnOffsetDecoderBaseline
+synthesize_one \
+    ColumnOffsetDecoderBaseline \
+    [list \
+        "/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderBaseline.topEntity/topEntity.vhdl" \
+        "/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderBaseline.topEntity/ColumnOffsetDecoderBaseline_topEntity_types.vhdl" \
+    ] \
+    "/home/akashpt/LX100RTL/synth/ColumnOffsetDecoderBaseline.topEntity"
+
+===================================================
+ Synthesizing block: ColumnOffsetDecoderBaseline
+===================================================
+
+Loading vhdl files: '/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderBaseline.topEntity/topEntity.vhdl' '/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderBaseline.topEntity/ColumnOffsetDecoderBaseline_topEntity_types.vhdl' 
+Running PRESTO HDLC
+-- Compiling Source File /home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderBaseline.topEntity/topEntity.vhdl
+Compiling Entity Declaration TOPENTITY
+Compiling Architecture STRUCTURAL of TOPENTITY
+Warning:  /home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderBaseline.topEntity/topEntity.vhdl:21: The architecture structural has already been analyzed. It is being replaced. (VHD-4)
+-- Compiling Source File /home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderBaseline.topEntity/ColumnOffsetDecoderBaseline_topEntity_types.vhdl
+Compiling Package Declaration COLUMNOFFSETDECODERBASELINE_TOPENTITY_TYPES
+Compiling Package Body COLUMNOFFSETDECODERBASELINE_TOPENTITY_TYPES
+Presto compilation completed successfully.
+Current design is now '/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderBaseline.topEntity/topEntity.db:topEntity'
+Loaded 1 design.
+Current design is 'topEntity'.
+Error: 'topEntity' doesn't specify a unique design
+	Please use complete specification: full_file_name:design_name (UID-13)
+Current design is 'topEntity'.
+Warning: port 'rst' is of the wrong type. (UID-119)
+Warning: Ignoring all 1 objects in collection '_sel111' because they are not of type cell, reference, net, design, power_domain, or lib_cell. (UID-445)
+Error: Value for list 'object_list' must have 1 elements. (CMD-036)
+Error: Cannot find the specified driving cell in memory.   (UID-993)
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+ 
+****************************************
+check_design summary:
+Version:     V-2023.12-SP5
+Date:        Tue Dec  2 17:15:16 2025
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                      3
+    Unconnected ports (LINT-28)                                     3
+--------------------------------------------------------------------------------
+
+Warning: In design 'topEntity', port 'clk' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'rst' is not connected to any nets. (LINT-28)
+Warning: In design 'topEntity', port 'en' is not connected to any nets. (LINT-28)
+Information: Failed to find dw_foundation.sldb in the user defined search_path, load it from 'Synopsys Root'. (UISN-70)
+Warning: DesignWare synthetic library dw_foundation.sldb is added to the synthetic_library in the current command. (UISN-40)
+Information: Performing leakage power optimization. (PWR-850)
+CPU Load: 264%, Ram Free: 2 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Alib files are up-to-date.
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler WLM                                                               |
+| Command Line | compile_ultra -no_autoungroup -retime -gate_clock                                 |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 1                                      |
+| Number of User Hierarchies                              | 0                                      |
+| Sequential Cell Count                                   | 0                                      |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 4                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 0                                      |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+----------------------------------------------------------------------------------------------------
+| Variables                                               | Value                                  |
+----------------------------------------------------------------------------------------------------
+| set_fix_multiple_port_nets                              | -all -buffer_constants                 |
+====================================================================================================
+Information: Sequential output inversion is enabled.  SVF file must be used for formal verification. (OPT-1208)
+Information: Retiming is enabled. SVF file must be used for formal verification. (OPT-1210)
+
+Information: There are 3 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+  Simplifying Design 'topEntity'
+
+CPU Load: 233%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+Information: State dependent leakage is now switched from on to off.
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'topEntity'
+ Implement Synthetic for 'topEntity'.
+Information: Added key list 'DesignWare' to design 'topEntity'. (DDB-72)
+CPU Load: 233%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11333 GB, Tmp Disk Free: 28 GB
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: The library cell 'TIELBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEHBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+Information: Skipping clock gating on design topEntity, since there are no registers. (PWR-806)
+
+  Beginning Mapping Optimizations  (Ultra High effort)
+  -------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:06      78.4      0.00       0.0    3889.1                            237.5762
+    0:00:06      78.4      0.00       0.0    3889.1                            237.5762
+
+  Beginning Constant Register Removal
+  -----------------------------------
+
+  Beginning Global Optimizations
+  ------------------------------
+  Numerical Synthesis (Phase 1)
+  Numerical Synthesis (Phase 2)
+  Global Optimization (Phase 230)
+  Global Optimization (Phase 231)
+  Global Optimization (Phase 232)
+  Global Optimization (Phase 233)
+  Global Optimization (Phase 234)
+  Global Optimization (Phase 235)
+  Global Optimization (Phase 236)
+  Global Optimization (Phase 237)
+  Global Optimization (Phase 238)
+  Global Optimization (Phase 239)
+  Global Optimization (Phase 240)
+  Global Optimization (Phase 241)
+  Global Optimization (Phase 242)
+  Global Optimization (Phase 243)
+  Global Optimization (Phase 244)
+  Global Optimization (Phase 245)
+  Global Optimization (Phase 246)
+  Global Optimization (Phase 247)
+  Global Optimization (Phase 248)
+  Global Optimization (Phase 249)
+  Global Optimization (Phase 250)
+  Global Optimization (Phase 251)
+  Global Optimization (Phase 252)
+  Global Optimization (Phase 253)
+  Global Optimization (Phase 254)
+  Global Optimization (Phase 255)
+  Global Optimization (Phase 256)
+  Global Optimization (Phase 257)
+
+  Beginning Isolate Ports
+  -----------------------
+
+  Beginning Delay Optimization
+  ----------------------------
+    0:00:07      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:07      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:07      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:08      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:08      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:08      63.3      0.00       0.0    3982.5                            200.7252
+
+  Beginning WLM Backend Optimization
+  --------------------------------------
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+
+
+  Beginning Design Rule Fixing  (max_transition)
+  ----------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:10      63.3      0.00       0.0    3982.5                            200.7252
+  Global Optimization (Phase 258)
+  Global Optimization (Phase 259)
+  Global Optimization (Phase 260)
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+
+
+  Beginning Leakage Power Optimization  (max_leakage_power 0)
+  ------------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+  Global Optimization (Phase 261)
+  Global Optimization (Phase 262)
+  Global Optimization (Phase 263)
+  Global Optimization (Phase 264)
+  Global Optimization (Phase 265)
+  Global Optimization (Phase 266)
+  Global Optimization (Phase 267)
+  Global Optimization (Phase 268)
+  Global Optimization (Phase 269)
+  Global Optimization (Phase 270)
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:11     215.2      0.00       0.0       0.0                           1095.8147
+    0:00:12     202.4      0.00       0.0       1.4                           1027.2061
+    0:00:12     202.4      0.00       0.0       1.4                           1027.2061
+    0:00:12     202.4      0.00       0.0       1.4                           1027.2061
+    0:00:12     202.4      0.00       0.0       1.4                           1027.2061
+    0:00:12     204.2      0.00       0.0       0.3                           1043.5900
+    0:00:12     204.2      0.00       0.0       0.3                           1043.5900
+    0:00:12     204.2      0.00       0.0       0.3                           1043.5900
+    0:00:12     204.2      0.00       0.0       0.3                           1043.5900
+    0:00:12     204.2      0.00       0.0       0.3                           1043.5900
+    0:00:12     204.2      0.00       0.0       0.3                           1043.5900
+    0:00:13     203.0      0.00       0.0       0.3                           1032.7401
+CPU Load: 216%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11334 GB, Tmp Disk Free: 28 GB
+Loading db file '/afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: State dependent leakage is now switched from off to on.
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+CPU Load: 195%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11334 GB, Tmp Disk Free: 28 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Writing verilog file '/home/akashpt/LX100RTL/synth/ColumnOffsetDecoderBaseline/topEntity.v'.
+Writing ddc file 'synth/ColumnOffsetDecoderBaseline/topEntity.ddc'.
+1
+# ColumnOffsetDecoderFrequency
+synthesize_one \
+    ColumnOffsetDecoderFrequency \
+    [list \
+        "/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderFrequency.topEntity/topEntity.vhdl" \
+        "/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderFrequency.topEntity/ColumnOffsetDecoderFrequency_topEntity_types.vhdl" \
+    ] \
+    "/home/akashpt/LX100RTL/synth/ColumnOffsetDecoderFrequency.topEntity"
+
+===================================================
+ Synthesizing block: ColumnOffsetDecoderFrequency
+===================================================
+
+Loading vhdl files: '/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderFrequency.topEntity/topEntity.vhdl' '/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderFrequency.topEntity/ColumnOffsetDecoderFrequency_topEntity_types.vhdl' 
+Running PRESTO HDLC
+-- Compiling Source File /home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderFrequency.topEntity/topEntity.vhdl
+Compiling Entity Declaration TOPENTITY
+Compiling Architecture STRUCTURAL of TOPENTITY
+Warning:  /home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderFrequency.topEntity/topEntity.vhdl:21: The architecture structural has already been analyzed. It is being replaced. (VHD-4)
+-- Compiling Source File /home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderFrequency.topEntity/ColumnOffsetDecoderFrequency_topEntity_types.vhdl
+Compiling Package Declaration COLUMNOFFSETDECODERFREQUENCY_TOPENTITY_TYPES
+Compiling Package Body COLUMNOFFSETDECODERFREQUENCY_TOPENTITY_TYPES
+Warning:  /home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderFrequency.topEntity/topEntity.vhdl:23: The initial value for signal '\c$ds_app_arg\' is not supported for synthesis. Presto ignores it.  (ELAB-130)
+
+Inferred memory devices in process
+	in routine topEntity line 42 in file
+		'/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderFrequency.topEntity/topEntity.vhdl'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+| \c$ds_app_arg\_reg  | Flip-flop |  16   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully.
+Current design is now '/home/akashpt/LX100RTL/ColumnDecoder/vhdl/ColumnOffsetDecoderFrequency.topEntity/topEntity.db:topEntity'
+Loaded 1 design.
+Current design is 'topEntity'.
+Error: 'topEntity' doesn't specify a unique design
+	Please use complete specification: full_file_name:design_name (UID-13)
+Current design is 'topEntity'.
+Error: Cannot find the specified driving cell in memory.   (UID-993)
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Current design is 'topEntity'.
+Warning: Dont_touch on net 'rst' may be overridden by compile because it
+	is connected to generic logic. Use all_connected to see net
+	connections. (OPT-461)
+Warning: Dont_touch on net 'rst' may be overridden by compile because it
+	is connected to generic logic. Use all_connected to see net
+	connections. (OPT-461)
+Information: Failed to find dw_foundation.sldb in the user defined search_path, load it from 'Synopsys Root'. (UISN-70)
+Warning: DesignWare synthetic library dw_foundation.sldb is added to the synthetic_library in the current command. (UISN-40)
+Information: Performing leakage power optimization. (PWR-850)
+CPU Load: 185%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11334 GB, Tmp Disk Free: 28 GB
+Alib files are up-to-date.
+Warning: Dont_touch on net 'rst' may be overridden by compile because it
+	is connected to generic logic. Use all_connected to see net
+	connections. (OPT-461)
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler WLM                                                               |
+| Command Line | compile_ultra -no_autoungroup -retime -gate_clock                                 |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 18                                     |
+| Number of User Hierarchies                              | 0                                      |
+| Sequential Cell Count                                   | 16                                     |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 4                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 1                                      |
+| Number of Dont Touch Cells                              | 0                                      |
+| Number of Dont Touch Nets                               | 1                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+----------------------------------------------------------------------------------------------------
+| Variables                                               | Value                                  |
+----------------------------------------------------------------------------------------------------
+| set_fix_multiple_port_nets                              | -all -buffer_constants                 |
+====================================================================================================
+Information: Sequential output inversion is enabled.  SVF file must be used for formal verification. (OPT-1208)
+Information: Retiming is enabled. SVF file must be used for formal verification. (OPT-1210)
+  Simplifying Design 'topEntity'
+Warning: Dont_touch on net 'rst' may be overridden by compile because it
+	is connected to generic logic. Use all_connected to see net
+	connections. (OPT-461)
+
+CPU Load: 166%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11334 GB, Tmp Disk Free: 28 GB
+Information: State dependent leakage is now switched from on to off.
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'topEntity'
+ Implement Synthetic for 'topEntity'.
+Information: Added key list 'DesignWare' to design 'topEntity'. (DDB-72)
+  Processing 'SNPS_CLOCK_GATE_HIGH_topEntity'
+  Mapping integrated clock gating circuitry
+CPU Load: 166%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11334 GB, Tmp Disk Free: 28 GB
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+Information: The library cell 'TIELBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The library cell 'TIEHBWP30P140' in the library 'tcbn28hpcplusbwp30p140tt0p9v25c_ccs' is not characterized for internal power. (PWR-536)
+Information: The target library(s) contains cell(s), other than black boxes, that are not characterized for internal power. (PWR-24)
+Information: Skipping clock gating on design SNPS_CLOCK_GATE_HIGH_topEntity, since there are no registers. (PWR-806)
+Information: Performing clock-gating on design topEntity. (PWR-730)
+
+  Beginning Mapping Optimizations  (Ultra High effort)
+  -------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:06     121.6      0.00       0.0    3896.9                            441.0264
+    0:00:06     121.6      0.00       0.0    3896.9                            441.0264
+
+  Beginning Constant Register Removal
+  -----------------------------------
+
+  Beginning Global Optimizations
+  ------------------------------
+  Numerical Synthesis (Phase 1)
+  Numerical Synthesis (Phase 2)
+  Global Optimization (Phase 271)
+  Global Optimization (Phase 272)
+  Global Optimization (Phase 273)
+  Global Optimization (Phase 274)
+  Global Optimization (Phase 275)
+  Global Optimization (Phase 276)
+  Global Optimization (Phase 277)
+  Global Optimization (Phase 278)
+  Global Optimization (Phase 279)
+  Global Optimization (Phase 280)
+  Global Optimization (Phase 281)
+  Global Optimization (Phase 282)
+  Global Optimization (Phase 283)
+  Global Optimization (Phase 284)
+  Global Optimization (Phase 285)
+  Global Optimization (Phase 286)
+  Global Optimization (Phase 287)
+  Global Optimization (Phase 288)
+  Global Optimization (Phase 289)
+  Global Optimization (Phase 290)
+  Global Optimization (Phase 291)
+  Global Optimization (Phase 292)
+  Global Optimization (Phase 293)
+  Global Optimization (Phase 294)
+  Global Optimization (Phase 295)
+  Global Optimization (Phase 296)
+  Global Optimization (Phase 297)
+  Global Optimization (Phase 298)
+
+  Beginning Isolate Ports
+  -----------------------
+
+  Beginning Delay Optimization
+  ----------------------------
+    0:00:07     106.1      0.00       0.0    3936.4                            389.6271
+    0:00:07     106.1      0.00       0.0    3936.4                            389.6271
+    0:00:07     106.1      0.00       0.0    3936.4                            389.6271
+    0:00:08     106.1      0.00       0.0    3936.4                            389.6271
+    0:00:08     105.8      0.00       0.0    3936.4                            389.5955
+    0:00:08     105.8      0.00       0.0    3936.4                            389.5955
+
+  Beginning WLM Backend Optimization
+  --------------------------------------
+    0:00:09     106.1      0.00       0.0    3936.4                            389.6271
+    0:00:09     106.1      0.00       0.0    3936.4                            389.6271
+    0:00:09     106.1      0.00       0.0    3936.4                            389.6271
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+
+
+  Beginning Design Rule Fixing  (max_transition)
+  ----------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:10     106.1      0.00       0.0    3936.4                            388.5338
+  Global Optimization (Phase 299)
+  Global Optimization (Phase 300)
+  Global Optimization (Phase 301)
+    0:00:10     256.5      0.00       0.0       0.0                           1270.7009
+    0:00:10     256.5      0.00       0.0       0.0                           1270.7009
+
+
+  Beginning Leakage Power Optimization  (max_leakage_power 0)
+  ------------------------------------
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:10     256.5      0.00       0.0       0.0                           1270.7009
+  Global Optimization (Phase 302)
+  Global Optimization (Phase 303)
+  Global Optimization (Phase 304)
+  Global Optimization (Phase 305)
+  Global Optimization (Phase 306)
+  Global Optimization (Phase 307)
+  Global Optimization (Phase 308)
+  Global Optimization (Phase 309)
+  Global Optimization (Phase 310)
+  Global Optimization (Phase 311)
+  Global Optimization (Phase 312)
+    0:00:10     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:10     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:10     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+
+                                  TOTAL                                                
+   ELAPSED            WORST NEG   SETUP    DESIGN                              LEAKAGE 
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT            POWER  
+  --------- --------- --------- --------- --------- ------------------------- ---------
+    0:00:11     249.0      0.00       0.0       0.0                           1251.9742
+    0:00:11     239.1      0.00       0.0       0.6                           1186.9519
+    0:00:11     239.1      0.00       0.0       0.6                           1186.9519
+    0:00:11     239.1      0.00       0.0       0.6                           1186.9519
+    0:00:11     239.1      0.00       0.0       0.6                           1186.9519
+    0:00:12     236.0      0.00       0.0       0.1                           1182.2217
+    0:00:12     236.0      0.00       0.0       0.1                           1182.2217
+    0:00:12     236.0      0.00       0.0       0.1                           1182.2217
+    0:00:12     236.0      0.00       0.0       0.1                           1182.2217
+    0:00:12     236.0      0.00       0.0       0.1                           1182.2217
+    0:00:12     236.0      0.00       0.0       0.1                           1182.2217
+CPU Load: 155%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11334 GB, Tmp Disk Free: 28 GB
+Loading db file '/afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: State dependent leakage is now switched from off to on.
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+CPU Load: 138%, Ram Free: 1 GB, Swap Free: 8 GB, Work Disk Free: 11334 GB, Tmp Disk Free: 28 GB
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+Writing verilog file '/home/akashpt/LX100RTL/synth/ColumnOffsetDecoderFrequency/topEntity.v'.
+Writing ddc file 'synth/ColumnOffsetDecoderFrequency/topEntity.ddc'.
+1
+quit
+
+Memory usage for this session 1589 Mbytes.
+Memory usage for this session including child processes 1589 Mbytes.
+CPU usage for this session 206 seconds ( 0.06 hours ).
+Elapsed time for this session 250 seconds ( 0.07 hours ).
+
+Thank you...

@@ -1,0 +1,377 @@
+Information: Updating design information... (UID-85)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 10
+Design : topEntity
+Version: V-2023.12-SP5
+Date   : Tue Dec  2 17:15:43 2025
+****************************************
+
+Operating Conditions: tt0p9v25c   Library: tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: inputSig[6]
+              (input port clocked by clk)
+  Endpoint: result[95] (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  inputSig[6] (in)                         0.00       0.10 r
+  U307/ZN (INVD1BWP30P140)                 0.01       0.11 f
+  U390/ZN (NR2D1BWP30P140)                 0.03       0.13 r
+  U289/ZN (ND2D1BWP30P140)                 0.06       0.19 f
+  U213/Z (OR2D1BWP30P140)                  0.04       0.23 f
+  U329/ZN (INVD3BWP30P140)                 0.04       0.27 r
+  result[95] (out)                         0.00       0.27 r
+  data arrival time                                   0.27
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.27
+  -----------------------------------------------------------
+  slack (MET)                                         0.58
+
+
+  Startpoint: inputSig[6]
+              (input port clocked by clk)
+  Endpoint: result[88] (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  inputSig[6] (in)                         0.00       0.10 r
+  U307/ZN (INVD1BWP30P140)                 0.01       0.11 f
+  U390/ZN (NR2D1BWP30P140)                 0.03       0.13 r
+  U289/ZN (ND2D1BWP30P140)                 0.06       0.19 f
+  U208/Z (OR2D1BWP30P140)                  0.04       0.23 f
+  U331/ZN (INVD3BWP30P140)                 0.04       0.27 r
+  result[88] (out)                         0.00       0.27 r
+  data arrival time                                   0.27
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.27
+  -----------------------------------------------------------
+  slack (MET)                                         0.58
+
+
+  Startpoint: inputSig[6]
+              (input port clocked by clk)
+  Endpoint: result[90] (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  inputSig[6] (in)                         0.00       0.10 r
+  U307/ZN (INVD1BWP30P140)                 0.01       0.11 f
+  U390/ZN (NR2D1BWP30P140)                 0.03       0.13 r
+  U289/ZN (ND2D1BWP30P140)                 0.06       0.19 f
+  U209/Z (OR2D1BWP30P140)                  0.04       0.23 f
+  U330/ZN (INVD3BWP30P140)                 0.04       0.27 r
+  result[90] (out)                         0.00       0.27 r
+  data arrival time                                   0.27
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.27
+  -----------------------------------------------------------
+  slack (MET)                                         0.58
+
+
+  Startpoint: inputSig[6]
+              (input port clocked by clk)
+  Endpoint: result[115]
+            (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  inputSig[6] (in)                         0.00       0.10 r
+  U307/ZN (INVD1BWP30P140)                 0.01       0.11 f
+  U390/ZN (NR2D1BWP30P140)                 0.03       0.13 r
+  U296/ZN (ND2D3BWP30P140)                 0.06       0.19 f
+  U233/Z (OR2D1BWP30P140)                  0.04       0.23 f
+  U364/ZN (INVD3BWP30P140)                 0.04       0.27 r
+  result[115] (out)                        0.00       0.27 r
+  data arrival time                                   0.27
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.27
+  -----------------------------------------------------------
+  slack (MET)                                         0.58
+
+
+  Startpoint: inputSig[6]
+              (input port clocked by clk)
+  Endpoint: result[94] (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  inputSig[6] (in)                         0.00       0.10 r
+  U307/ZN (INVD1BWP30P140)                 0.01       0.11 f
+  U390/ZN (NR2D1BWP30P140)                 0.03       0.13 r
+  U289/ZN (ND2D1BWP30P140)                 0.06       0.19 f
+  U212/Z (OR2D1BWP30P140)                  0.03       0.22 f
+  U365/ZN (INVD3BWP30P140)                 0.04       0.27 r
+  result[94] (out)                         0.00       0.27 r
+  data arrival time                                   0.27
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.27
+  -----------------------------------------------------------
+  slack (MET)                                         0.58
+
+
+  Startpoint: inputSig[6]
+              (input port clocked by clk)
+  Endpoint: result[93] (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  inputSig[6] (in)                         0.00       0.10 r
+  U307/ZN (INVD1BWP30P140)                 0.01       0.11 f
+  U390/ZN (NR2D1BWP30P140)                 0.03       0.13 r
+  U289/ZN (ND2D1BWP30P140)                 0.06       0.19 f
+  U211/Z (OR2D1BWP30P140)                  0.03       0.22 f
+  U366/ZN (INVD3BWP30P140)                 0.04       0.27 r
+  result[93] (out)                         0.00       0.27 r
+  data arrival time                                   0.27
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.27
+  -----------------------------------------------------------
+  slack (MET)                                         0.58
+
+
+  Startpoint: inputSig[6]
+              (input port clocked by clk)
+  Endpoint: result[92] (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  inputSig[6] (in)                         0.00       0.10 r
+  U307/ZN (INVD1BWP30P140)                 0.01       0.11 f
+  U390/ZN (NR2D1BWP30P140)                 0.03       0.13 r
+  U289/ZN (ND2D1BWP30P140)                 0.06       0.19 f
+  U210/Z (OR2D1BWP30P140)                  0.03       0.22 f
+  U367/ZN (INVD3BWP30P140)                 0.04       0.27 r
+  result[92] (out)                         0.00       0.27 r
+  data arrival time                                   0.27
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.27
+  -----------------------------------------------------------
+  slack (MET)                                         0.58
+
+
+  Startpoint: inputSig[6]
+              (input port clocked by clk)
+  Endpoint: result[77] (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  inputSig[6] (in)                         0.00       0.10 r
+  U307/ZN (INVD1BWP30P140)                 0.01       0.11 f
+  U388/ZN (NR2D1BWP30P140)                 0.03       0.13 r
+  U287/ZN (ND2D1BWP30P140)                 0.06       0.19 f
+  U199/Z (OR2D1BWP30P140)                  0.04       0.22 f
+  U352/ZN (INVD3BWP30P140)                 0.04       0.27 r
+  result[77] (out)                         0.00       0.27 r
+  data arrival time                                   0.27
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.27
+  -----------------------------------------------------------
+  slack (MET)                                         0.58
+
+
+  Startpoint: inputSig[6]
+              (input port clocked by clk)
+  Endpoint: result[79] (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  inputSig[6] (in)                         0.00       0.10 r
+  U307/ZN (INVD1BWP30P140)                 0.01       0.11 f
+  U388/ZN (NR2D1BWP30P140)                 0.03       0.13 r
+  U287/ZN (ND2D1BWP30P140)                 0.06       0.19 f
+  U200/Z (OR2D1BWP30P140)                  0.04       0.22 f
+  U325/ZN (INVD3BWP30P140)                 0.04       0.27 r
+  result[79] (out)                         0.00       0.27 r
+  data arrival time                                   0.27
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.27
+  -----------------------------------------------------------
+  slack (MET)                                         0.58
+
+
+  Startpoint: inputSig[6]
+              (input port clocked by clk)
+  Endpoint: result[72] (output port clocked by clk)
+  Path Group: INPUTS
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  topEntity          ZeroWireload          tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  input external delay                     0.10       0.10 r
+  inputSig[6] (in)                         0.00       0.10 r
+  U307/ZN (INVD1BWP30P140)                 0.01       0.11 f
+  U388/ZN (NR2D1BWP30P140)                 0.03       0.13 r
+  U287/ZN (ND2D1BWP30P140)                 0.06       0.19 f
+  U195/Z (OR2D1BWP30P140)                  0.04       0.22 f
+  U328/ZN (INVD3BWP30P140)                 0.04       0.27 r
+  result[72] (out)                         0.00       0.27 r
+  data arrival time                                   0.27
+
+  clock clk (rise edge)                    1.00       1.00
+  clock network delay (ideal)              0.00       1.00
+  clock uncertainty                       -0.05       0.95
+  output external delay                   -0.10       0.85
+  data required time                                  0.85
+  -----------------------------------------------------------
+  data required time                                  0.85
+  data arrival time                                  -0.27
+  -----------------------------------------------------------
+  slack (MET)                                         0.58
+
+
+1

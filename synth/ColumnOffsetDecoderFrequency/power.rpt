@@ -1,0 +1,60 @@
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : topEntity
+Version: V-2023.12-SP5
+Date   : Tue Dec  2 17:16:13 2025
+****************************************
+
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp30p140tt0p9v25c_ccs (File: /afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db)
+
+
+Operating Conditions: tt0p9v25c   Library: tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+topEntity              ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+
+Global Operating Voltage = 0.9  
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+Attributes
+----------
+i - Including register clock pin internal power
+
+
+  Cell Internal Power  =  36.1358 uW   (60%)
+  Net Switching Power  =  23.9668 uW   (40%)
+                         ---------
+Total Dynamic Power    =  60.1026 uW  (100%)
+
+Cell Leakage Power     = 629.9492 nW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network  3.1493e-02        3.4994e-03            8.5507        3.5001e-02  (  57.63%)  i
+register       1.5837e-03        7.2544e-05          131.3439        1.7876e-03  (   2.94%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational  3.0590e-03        2.0395e-02          490.0229        2.3944e-02  (  39.43%)
+--------------------------------------------------------------------------------------------------
+Total          3.6136e-02 mW     2.3967e-02 mW       629.9175 nW     6.0733e-02 mW
+1

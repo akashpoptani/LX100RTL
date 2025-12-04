@@ -1,0 +1,124 @@
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : topEntity
+Version: V-2023.12-SP5
+Date   : Tue Dec  2 17:12:55 2025
+****************************************
+
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp30p140tt0p9v25c_ccs (File: /afs/eecs.umich.edu/kits/TSMC/N28HPC+/2018.10/tcbn28hpcplusbwp30p140/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp30p140_180a/tcbn28hpcplusbwp30p140tt0p9v25c_ccs.db)
+
+
+Operating Conditions: tt0p9v25c   Library: tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+topEntity              ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_0
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_1
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_2
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_3
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_4
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_5
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_6
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_7
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_8
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_9
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_10
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_11
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_12
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_13
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_14
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_15
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_16
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_17
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_18
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_19
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_20
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_21
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_22
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_23
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_24
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_25
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_26
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_27
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_28
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_29
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_30
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_31
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+SNPS_CLOCK_GATE_HIGH_topEntity_32
+                       ZeroWireload      tcbn28hpcplusbwp30p140tt0p9v25c_ccs
+
+
+Global Operating Voltage = 0.9  
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+Attributes
+----------
+i - Including register clock pin internal power
+
+
+  Cell Internal Power  = 197.7153 uW   (66%)
+  Net Switching Power  = 102.0606 uW   (34%)
+                         ---------
+Total Dynamic Power    = 299.7759 uW  (100%)
+
+Cell Leakage Power     =   4.9325 uW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.1337        2.2561e-03          255.7532            0.1362  (  44.70%)  i
+register       5.1799e-02        1.9807e-02        3.8676e+03        7.5473e-02  (  24.77%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational  1.2228e-02        7.9998e-02          809.1163        9.3035e-02  (  30.53%)
+--------------------------------------------------------------------------------------------------
+Total              0.1977 mW         0.1021 mW     4.9325e+03 nW         0.3047 mW
+1
