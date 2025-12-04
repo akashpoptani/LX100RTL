@@ -8,7 +8,13 @@ use work.all;
 use work.AddressComparator_topEntity_types.all;
 
 entity topEntity is
-  port(addr1  : in std_logic_vector(33 downto 0);
+  port(-- clock
+       clk    : in AddressComparator_topEntity_types.clk_System;
+       -- reset
+       rst    : in AddressComparator_topEntity_types.rst_System;
+       -- enable
+       en     : in AddressComparator_topEntity_types.en_System;
+       addr1  : in std_logic_vector(33 downto 0);
        addr2  : in std_logic_vector(33 downto 0);
        result : out boolean);
 end;

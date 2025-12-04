@@ -23,51 +23,55 @@ type CHField = Bit         -- Channel field width (1 bit)
 
 -- Function to extract the ROField (Bits 33 down to 18)
 extractRO :: Addr34 -> ROField
--- FIX: Using bitCoerce for conversion from BitVector to Unsigned
 extractRO addr = bitCoerce (slice d33 d18 addr)
 
 -- Function to extract the BAField (Bits 17 down to 16)
 extractBA :: Addr34 -> BAField
--- FIX: Using bitCoerce for conversion from BitVector to Unsigned
 extractBA addr = bitCoerce (slice d17 d16 addr)
 
 -- Function to extract the BGField (Bits 15 down to 14)
 extractBG :: Addr34 -> BGField
--- FIX: Using bitCoerce for conversion from BitVector to Unsigned
 extractBG addr = bitCoerce (slice d15 d14 addr)
 
 -- Function to extract the CHField (Bit 6)
 extractCH :: Addr34 -> CHField
--- FIX: Use slice to get BitVector 1, then bitCoerce to Bit.
 extractCH addr = bitCoerce (slice d6 d6 addr)
 
 -- | Top-level combinational entity to compare two addresses.
 -- It outputs True if all specified fields (Channel, Bank Group, Bank, Row/Rank) are identical.
 topEntity
-  :: Signal System Addr34 -- ^ Address 1
+  :: Clock System
+  -> Reset System
+  -> Enable System
+  -> Signal System Addr34 -- ^ Address 1
   -> Signal System Addr34 -- ^ Address 2
   -> Signal System Bool   -- ^ Result: True if fields match
-topEntity addr1 addr2 = allMatch
-  where
+topEntity clk rst en addr1 addr2 =
+  -- Wrapping the combinational logic in the sequential domain.
+  withClockResetEnable clk rst en $ (do
     -- Extract all relevant fields from Address 1
-    ro1 = fmap extractRO addr1
-    ba1 = fmap extractBA addr1
-    bg1 = fmap extractBG addr1
-    ch1 = fmap extractCH addr1
+    let ro1 = fmap extractRO addr1
+    let ba1 = fmap extractBA addr1
+    let bg1 = fmap extractBG addr1
+    let ch1 = fmap extractCH addr1
 
     -- Extract all relevant fields from Address 2
-    ro2 = fmap extractRO addr2
-    ba2 = fmap extractBA addr2
-    bg2 = fmap extractBG addr2
-    ch2 = fmap extractCH addr2
+    let ro2 = fmap extractRO addr2
+    let ba2 = fmap extractBA addr2
+    let bg2 = fmap extractBG addr2
+    let ch2 = fmap extractCH addr2
 
     -- Compare fields using signal equality (.==.)
-    roMatch = ro1 .==. ro2
-    baMatch = ba1 .==. ba2
-    bgMatch = bg1 .==. bg2
-    chMatch = ch1 .==. ch2
+    let roMatch = ro1 .==. ro2
+    let baMatch = ba1 .==. ba2
+    let bgMatch = bg1 .==. bg2
+    let chMatch = ch1 .==. ch2
 
     -- Combine all match results using signal logical AND (.&&.)
-    allMatch = roMatch .&&. baMatch .&&. bgMatch .&&. chMatch
+    let allMatch = roMatch .&&. baMatch .&&. bgMatch .&&. chMatch
+
+    -- Return the result signal (FIX: Output expression directly instead of using 'return')
+    allMatch
+  )
 
 {-# CLASH_OPAQUE topEntity #-}

@@ -8,7 +8,13 @@ use work.all;
 use work.RequestGenerator3_topEntity_types.all;
 
 entity topEntity is
-  port(mem0_0       : in std_logic_vector(10 downto 0);
+  port(-- clock
+       clk          : in RequestGenerator3_topEntity_types.clk_System;
+       -- reset
+       rst          : in RequestGenerator3_topEntity_types.rst_System;
+       -- enable
+       en           : in RequestGenerator3_topEntity_types.en_System;
+       mem0_0       : in std_logic_vector(10 downto 0);
        mem0_1       : in std_logic_vector(10 downto 0);
        mem0_2       : in std_logic_vector(10 downto 0);
        mem0_3       : in std_logic_vector(10 downto 0);
@@ -83,11 +89,11 @@ entity topEntity is
 end;
 
 architecture structural of topEntity is
-  -- RequestGenerator3.hs:40:1-9
+  -- RequestGenerator3.hs:43:1-9
   signal b          : boolean;
-  -- RequestGenerator3.hs:40:1-9
+  -- RequestGenerator3.hs:43:1-9
   signal t          : std_logic_vector(10 downto 0);
-  -- RequestGenerator3.hs:40:1-9
+  -- RequestGenerator3.hs:43:1-9
   signal f2         : std_logic_vector(10 downto 0);
   signal result_2   : std_logic_vector(10 downto 0);
   signal mem0       : RequestGenerator3_topEntity_types.array_of_std_logic_vector_11(0 to 31);

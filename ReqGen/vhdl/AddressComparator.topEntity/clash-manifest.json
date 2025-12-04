@@ -6,23 +6,51 @@
         20,
         20
     ],
-    "hash": "023a1af22da93022f579319b7e8cc267f223ecea69c56aa7003ab8df5a2c9d59",
+    "hash": "3334c4ea6a952ebbdeceddbaea444946a114e4c0845873cccec1436d16c3ff72",
     "dependencies": {
         "transitive": []
     },
     "version": "unstable",
     "files": [
         {
+            "name": "topEntity.sdc",
+            "sha256": "13d4c1aafcc09a84d81d3b60d513cb901384a10e27e5a5a16572a600f15895f3"
+        },
+        {
             "name": "AddressComparator_topEntity_types.vhdl",
-            "sha256": "e6acb1d1f40e2124f3980392134c6e372092b4d5c5900c4d11ad68fd39318cb5"
+            "sha256": "035e05222ac7271706a9fa5b66373fe5066b9d772f4a17c295a5ab3120088b20"
         },
         {
             "name": "topEntity.vhdl",
-            "sha256": "2745245ad957b73ff85eb069f9ef0122b77f39106a5fb231e6892733929eb164"
+            "sha256": "ff6f48ed6f677c00fbb0664cda160a97a28f184e9158d08f37e3a11615d8017b"
         }
     ],
     "top_component": {
         "ports_flat": [
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "clk",
+                "is_clock": true,
+                "type_name": "clk.AddressComparator_topEntity_types.clk_System"
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "rst",
+                "is_clock": false,
+                "type_name": "rst.AddressComparator_topEntity_types.rst_System"
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "en",
+                "is_clock": false,
+                "type_name": "en.AddressComparator_topEntity_types.en_System"
+            },
             {
                 "direction": "in",
                 "width": 34,

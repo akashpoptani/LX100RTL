@@ -6,23 +6,51 @@
         20,
         20
     ],
-    "hash": "53a09e78c153aca1916139ef6c0f5eac1cb05a1acab5a1515248c31beaecf7bb",
+    "hash": "18f49dd0d0377311e4961ac3a88449acbeb90ea0ebedce9892adc849d864e961",
     "dependencies": {
         "transitive": []
     },
     "version": "unstable",
     "files": [
         {
+            "name": "topEntity.sdc",
+            "sha256": "13d4c1aafcc09a84d81d3b60d513cb901384a10e27e5a5a16572a600f15895f3"
+        },
+        {
             "name": "RequestGenerator3_topEntity_types.vhdl",
-            "sha256": "3e35529a0966419bf0c1cb16aad702e88e5fdf9ea451a6563e51497444e543bf"
+            "sha256": "527027448a385f6f2b30dd695b6e7fed2fe53e4f880637fc8973725ab49cdbd2"
         },
         {
             "name": "topEntity.vhdl",
-            "sha256": "8e1cf5ff2cddbddc4a139922df59ae4e52f7cc398c5c34b06b6dd338808b910b"
+            "sha256": "20016f6290f0d8bd98d0930e7ce007046c4469772583104af7c09b4a9949d91a"
         }
     ],
     "top_component": {
         "ports_flat": [
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "clk",
+                "is_clock": true,
+                "type_name": "clk.RequestGenerator3_topEntity_types.clk_System"
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "rst",
+                "is_clock": false,
+                "type_name": "rst.RequestGenerator3_topEntity_types.rst_System"
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "width": 1,
+                "name": "en",
+                "is_clock": false,
+                "type_name": "en.RequestGenerator3_topEntity_types.en_System"
+            },
             {
                 "direction": "in",
                 "width": 11,

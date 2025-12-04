@@ -4,11 +4,16 @@ use IEEE.NUMERIC_STD.ALL;
 
 package AddressComparator_topEntity_types is
 
+  subtype rst_System is std_logic;
 
+  subtype en_System is boolean;
+  subtype clk_System is std_logic;
   function toSLV (b : in boolean) return std_logic_vector;
   function fromSLV (sl : in std_logic_vector) return boolean;
   function tagToEnum (s : in signed) return boolean;
   function dataToTag (b : in boolean) return signed;
+  function toSLV (sl : in std_logic) return std_logic_vector;
+  function fromSLV (slv : in std_logic_vector) return std_logic;
   function toSLV (slv : in std_logic_vector) return std_logic_vector;
   function fromSLV (slv : in std_logic_vector) return std_logic_vector;
 end;
@@ -45,6 +50,15 @@ package body AddressComparator_topEntity_types is
     else
       return to_signed(0,64);
     end if;
+  end;
+  function toSLV (sl : in std_logic) return std_logic_vector is
+  begin
+    return std_logic_vector'(0 => sl);
+  end;
+  function fromSLV (slv : in std_logic_vector) return std_logic is
+    alias islv : std_logic_vector (0 to slv'length - 1) is slv;
+  begin
+    return islv(0);
   end;
   function toSLV (slv : in std_logic_vector) return std_logic_vector is
   begin
